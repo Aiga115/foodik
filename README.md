@@ -25,7 +25,7 @@ pip install flask
 ### Running backend locally
 ```bash
 cd backend
-# make sure your virtual env is activated
+# make sure your virtual environment is activated
 python app.py
 ```
 
