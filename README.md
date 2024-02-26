@@ -18,6 +18,7 @@ virtualenv backend_env -p python3
 source backend_env/bin/activate
 # install flask
 pip install flask
+pip install Flask-SQLAlchemy
 ```
 
 ## Development setup
