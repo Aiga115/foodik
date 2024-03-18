@@ -19,16 +19,26 @@ const Register = ({ isLoggedIn, setLoggedIn }) => {
             },
             body: JSON.stringify({ username, password, email, phoneNumber }),
         })
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.token) {
-                    localStorage.setItem('token', data.token);
-                    setLoggedIn(true);
-                } else {
-                    alert('Registration failed. Username may already exist.');
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
                 }
+                return response.json();
+            })
+            .then((data) => {
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    // Registration successful, but no token is returned
+                    alert('Registration successful!');
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('An error occurred while processing your request');
             });
     };
+
 
     return (
         <div className="App">
