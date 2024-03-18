@@ -1,86 +1,60 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, request, jsonify
 from flask_cors import CORS
-from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 import mysql.connector
-import os
 
 app = Flask(__name__)
-app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY', 'default_secret_key')
-jwt = JWTManager(app)
-CORS(app)  # Enable CORS for all routes
+CORS(app)
 
-users = [{'username': 'admin', 'password': 'admin'}]
+# Connect to MySQL database
+mydb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="",
+    database="foodikdb"
+)
 
-# Database connection
-db_config = {
-    'host': 'localhost',
-    'port': 3306,
-    'user': 'root',
-    'password': '',
-    'database': 'foodikdb',
-    'auth_plugin': 'mysql_native_password',
-}
+def get_cursor():
+    return mydb.cursor()
 
-conn = mysql.connector.connect(**db_config)
-cursor = conn.cursor()
-
-
-def get_database_connection():
-    return mysql.connector.connect(**db_config)
-
-
-# Login
-@app.route('/login', methods=['POST'])
-def login():
-    try:
-        data = request.json
-        username = data.get('username')
-        password = data.get('password')
-
-        # Use the connection context manager to ensure proper cleanup
-        with get_database_connection() as conn:
-            with conn.cursor(dictionary=True) as cursor:
-                # Replace with your actual login query
-                cursor.execute("SELECT * FROM users WHERE username = %s AND password = %s", (username, password))
-                user = cursor.fetchone()
-
-        if user:
-            access_token = create_access_token(identity=username)
-            return jsonify({'token': access_token})
-        else:
-            return jsonify({'error': 'Invalid username or password'}), 401
-
-    except Exception as e:
-        print(f"An error occurred during login: {str(e)}")
-        return jsonify({'error': 'Internal Server Error'}), 500
-
-
-# Register
 @app.route('/register', methods=['POST'])
 def register():
-    try:
-        data = request.json
-        username = data.get('username')
-        password = data.get('password')
-        email = data.get('email')
-        phone_number = data.get('phoneNumber')
+    data = request.json
+    username = data.get('username')
+    password = data.get('password')
+    email = data.get('email')
+    phoneNumber = data.get('phoneNumber')
 
-        # Use the connection context manager to ensure proper cleanup
-        with get_database_connection() as conn:
-            with conn.cursor(dictionary=True) as cursor:
-                # Replace with your actual registration query
-                cursor.execute("INSERT INTO users (username, password, email, phoneNumber) VALUES (%s, %s, %s, %s)",
-                               (username, password, email, phone_number))
-                conn.commit()
 
-        access_token = create_access_token(identity=username)
-        return jsonify({'token': access_token})
+    if not username or not password:
+        return jsonify({'error': 'Username and password are required'}), 400
 
-    except Exception as e:
-        print(f"An error occurred during registration: {str(e)}")
-        return jsonify({'error': 'Internal Server Error'}), 500
+    cursor = get_cursor()
+    cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
+    user = cursor.fetchone()
 
+    if user:
+        return jsonify({'error': 'Username already exists. Please choose a different one.'}), 409
+
+    cursor.execute("INSERT INTO users (username, password, email, phoneNumber) VALUES (%s, %s, %s, %s)", (username, password, email, phoneNumber))
+    mydb.commit()
+
+    return jsonify({'message': 'User registered successfully'}), 201
+
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.json
+    username = data.get('username')
+    password = data.get('password')
+
+    cursor = get_cursor()
+    cursor.execute("SELECT * FROM users WHERE username = %s AND password = %s", (username, password))
+    user = cursor.fetchone()
+
+    if not user:
+        return jsonify({'error': 'Invalid username or password'}), 401
+
+    # Return user information upon successful login
+    return jsonify({'message': 'Login successful', 'user': {'id': user[0], 'username': user[1]}}), 200
 
 if __name__ == '__main__':
     app.run(debug=True)
-

@@ -20,17 +20,27 @@ const Login = ({ isLoggedIn, setLoggedIn, username, setUsername }) => {
       },
       body: JSON.stringify({ username, password }),
     })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.token) {
-          localStorage.setItem('token', data.token);
-          setLoggedIn(true);
-          navigate("/")
-        } else {
-          alert('Invalid username or password');
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
         }
+        return response.json();
+      })
+      .then((data) => {
+        if (data.error) {
+          alert(data.error);
+        } else {
+          // No token is returned, so just set loggedIn to true
+          setLoggedIn(true);
+          navigate("/");
+        }
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        alert('An error occurred while processing your request');
       });
   };
+
 
   return (
     <div className="App">
