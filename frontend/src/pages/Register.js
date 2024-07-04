@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
+
 
 const Register = ({ isLoggedIn, setLoggedIn }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
+    const navigate = useNavigate();
 
     const handleRegister = () => {
         if (!username || !password || !email || !phoneNumber) {
@@ -31,6 +34,7 @@ const Register = ({ isLoggedIn, setLoggedIn }) => {
                 } else {
                     // Registration successful, but no token is returned
                     alert('Registration successful!');
+                    navigate('/login');
                 }
             })
             .catch((error) => {
