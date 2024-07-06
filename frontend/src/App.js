@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   BrowserRouter as Router,
   Routes,
-  Route
+  Route,
+  Navigate,
+  useLocation
 } from "react-router-dom";
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -15,9 +17,11 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route exact path="/" element={<Home setLoggedIn={setLoggedIn} username={username} />} />
-        <Route exact path="/login" element={<Login isLoggedIn={isLoggedIn} setLoggedIn={setLoggedIn} username={username} setUsername={setUsername} />} />
+        <Route path="/" element={isLoggedIn ? <Home setLoggedIn={setLoggedIn} username={username} /> : <Navigate to="/register" />} />
+        <Route path="/login" element={<Login isLoggedIn={isLoggedIn} setLoggedIn={setLoggedIn} username={username} setUsername={setUsername} />} />
         <Route path="/register" element={<Register isLoggedIn={isLoggedIn} setLoggedIn={setLoggedIn} />} />
+        {/* Optional: Redirect to home if any undefined route */}
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>
   );

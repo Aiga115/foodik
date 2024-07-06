@@ -32,7 +32,6 @@ const Register = ({ isLoggedIn, setLoggedIn }) => {
                 if (data.error) {
                     alert(data.error);
                 } else {
-                    // Registration successful, but no token is returned
                     alert('Registration successful!');
                     navigate('/login');
                 }
@@ -48,32 +47,35 @@ const Register = ({ isLoggedIn, setLoggedIn }) => {
         <div className="App">
             {!isLoggedIn && (
                 <div>
-                    <h2>Register</h2>
-                    <input
-                        type="text"
-                        placeholder="Username"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                    />
-                    <input
-                        type="password"
-                        placeholder="Password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                    <input
-                        type="email"
-                        placeholder="Email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                    />
-                    <input
-                        type="tel"
-                        placeholder="Phone Number"
-                        value={phoneNumber}
-                        onChange={(e) => setPhoneNumber(e.target.value)}
-                    />
-                    <button onClick={handleRegister}>Register</button>
+                    <div>
+                        <h2>Register</h2>
+                        <input
+                            type="text"
+                            placeholder="Username"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                        />
+                        <input
+                            type="password"
+                            placeholder="Password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+                        <input
+                            type="email"
+                            placeholder="Email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
+                        <input
+                            type="tel"
+                            placeholder="Phone Number"
+                            value={phoneNumber}
+                            onChange={(e) => setPhoneNumber(e.target.value)}
+                        />
+                        <button onClick={handleRegister}>Register</button>
+                    </div>
+                    <a href='/login'>Already have an account? Sign In here</a>
                 </div>
             )}
         </div>
