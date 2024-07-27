@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Navigate,
-  useLocation
+  Navigate
 } from "react-router-dom";
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -20,7 +19,7 @@ function App() {
         <Route path="/" element={isLoggedIn ? <Home setLoggedIn={setLoggedIn} username={username} /> : <Navigate to="/register" />} />
         <Route path="/login" element={<Login isLoggedIn={isLoggedIn} setLoggedIn={setLoggedIn} username={username} setUsername={setUsername} />} />
         <Route path="/register" element={<Register isLoggedIn={isLoggedIn} setLoggedIn={setLoggedIn} />} />
-        {/* Optional: Redirect to home if any undefined route */}
+        {/* Redirect to home if any undefined route */}
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>

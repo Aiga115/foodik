@@ -1,6 +1,6 @@
-from flask import Flask, request, jsonify # type: ignore
-from flask_cors import CORS # type: ignore
-import mysql.connector # type: ignore
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+import mysql.connector
 import os
 
 app = Flask(__name__)
@@ -9,7 +9,7 @@ CORS(app)
 # Environment variables for database connection
 DB_HOST = os.getenv('DB_HOST', 'localhost')
 DB_USER = os.getenv('DB_USER', 'root')
-DB_PASSWORD = os.getenv('DB_PASSWORD', 'root')
+DB_PASSWORD = os.getenv('DB_PASSWORD', 'aiga')
 DB_NAME = os.getenv('DB_NAME', 'foodikdb')
 
 # Connect to MySQL database
@@ -79,48 +79,74 @@ def login():
 
     return jsonify(response), 200
 
-@app.route('/menus', methods=['POST'])
-def add_menu():
-    data = request.json
-    name = data.get('name')
+@app.route('/menus', methods=['POST', 'GET'])
+def manage_menus():
+    if request.method == 'POST':
+        data = request.json
+        name = data.get('name')
 
-    if not name:
-        return jsonify({'error': 'Menu name is required'}), 400
+        if not name:
+            return jsonify({'error': 'Menu name is required'}), 400
 
-    try:
-        mydb = get_db_connection()
-        cursor = mydb.cursor()
-        cursor.execute("INSERT INTO menus (name) VALUES (%s)", (name,))
-        menu_id = cursor.lastrowid
-        mydb.commit()
-        cursor.close()
-        mydb.close()
-    except mysql.connector.Error as err:
-        return jsonify({'error': str(err)}), 500
+        try:
+            mydb = get_db_connection()
+            cursor = mydb.cursor()
+            cursor.execute("INSERT INTO menus (name) VALUES (%s)", (name,))
+            menu_id = cursor.lastrowid
+            mydb.commit()
+            cursor.close()
+            mydb.close()
+        except mysql.connector.Error as err:
+            return jsonify({'error': str(err)}), 500
 
-    return jsonify({'message': 'Menu added successfully', 'id': menu_id}), 201
+        return jsonify({'message': 'Menu added successfully', 'id': menu_id}), 201
 
-@app.route('/categories', methods=['POST'])
-def add_category():
-    data = request.json
-    name = data.get('name')
-    menu_id = data.get('menu_id')
+    elif request.method == 'GET':
+        try:
+            mydb = get_db_connection()
+            cursor = mydb.cursor(dictionary=True)
+            cursor.execute("SELECT * FROM menus")
+            menus = cursor.fetchall()
+            cursor.close()
+            mydb.close()
+            return jsonify(menus), 200
+        except mysql.connector.Error as err:
+            return jsonify({'error': str(err)}), 500
 
-    if not name or not menu_id:
-        return jsonify({'error': 'Category name and menu ID are required'}), 400
+@app.route('/categories', methods=['POST', 'GET'])
+def manage_categories():
+    if request.method == 'POST':
+        data = request.json
+        name = data.get('name')
+        menu_id = data.get('menu_id')
 
-    try:
-        mydb = get_db_connection()
-        cursor = mydb.cursor()
-        cursor.execute("INSERT INTO categories (name, menu_id) VALUES (%s, %s)", (name, menu_id))
-        category_id = cursor.lastrowid
-        mydb.commit()
-        cursor.close()
-        mydb.close()
-    except mysql.connector.Error as err:
-        return jsonify({'error': str(err)}), 500
+        if not name or not menu_id:
+            return jsonify({'error': 'Category name and menu ID are required'}), 400
 
-    return jsonify({'message': 'Category added successfully', 'id': category_id}), 201
+        try:
+            mydb = get_db_connection()
+            cursor = mydb.cursor()
+            cursor.execute("INSERT INTO categories (name, menu_id) VALUES (%s, %s)", (name, menu_id))
+            category_id = cursor.lastrowid
+            mydb.commit()
+            cursor.close()
+            mydb.close()
+        except mysql.connector.Error as err:
+            return jsonify({'error': str(err)}), 500
+
+        return jsonify({'message': 'Category added successfully', 'id': category_id}), 201
+
+    elif request.method == 'GET':
+        try:
+            mydb = get_db_connection()
+            cursor = mydb.cursor(dictionary=True)
+            cursor.execute("SELECT * FROM categories")
+            categories = cursor.fetchall()
+            cursor.close()
+            mydb.close()
+            return jsonify(categories), 200
+        except mysql.connector.Error as err:
+            return jsonify({'error': str(err)}), 500
 
 @app.route('/food_items', methods=['POST'])
 def add_food_item():
@@ -193,8 +219,6 @@ def get_menus_with_items():
         return jsonify(list(menus.values())), 200
     except mysql.connector.Error as err:
         return jsonify({'error': str(err)}), 500
-
-
 
 if __name__ == '__main__':
     app.run(debug=True)
