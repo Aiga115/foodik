@@ -2,7 +2,22 @@ import React from "react";
 import { useEffect, useState } from "react";
 
 const MenuList = () => {
-    const [menu, setMenu] = useState([]); 
+    const [menu, setMenu] = useState([]);
+    const [menuId, setMenuId] = useState();
+
+    const handleDeleteMenuItem = async () => {
+        try {
+          const response = await fetch(`http://127.0.0.1:5000/menus/${menuId}`, {
+            method: 'DELETE',
+          });
+    
+          if (response.ok) {
+            const result = await response.json();
+          } 
+        } catch (error) {
+            console.log(error)
+        }
+      };
 
     useEffect(() => {
         fetch('http://127.0.0.1:5000/menus_with_items')
@@ -17,7 +32,7 @@ const MenuList = () => {
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                         <h2>{menuItem.name}</h2>
                         <div style={{ display: 'flex', gap: '0.25rem' }}>
-                            <button>Delete</button>
+                            <button onClick={handleDeleteMenuItem}>Delete</button>
                             <button>Edit</button>
                             <button>Add</button>
                         </div>

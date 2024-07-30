@@ -9,7 +9,7 @@ CORS(app)
 # Environment variables for database connection
 DB_HOST = os.getenv('DB_HOST', 'localhost')
 DB_USER = os.getenv('DB_USER', 'root')
-DB_PASSWORD = os.getenv('DB_PASSWORD', 'aiga')
+DB_PASSWORD = os.getenv('DB_PASSWORD', 'root')
 DB_NAME = os.getenv('DB_NAME', 'foodikdb')
 
 # Connect to MySQL database
@@ -112,6 +112,18 @@ def manage_menus():
             return jsonify(menus), 200
         except mysql.connector.Error as err:
             return jsonify({'error': str(err)}), 500
+    elif request.method== 'DELETE':
+        try:
+            mydb = get_db_connection()
+            cursor = mydb.cursor(dictionary=True)
+            cursor.execute("SELECT * FROM menus")
+            menus = cursor.fetchall()
+            cursor.close()
+            mydb.close()
+            return jsonify(menus), 200
+        except mysql.connector.Error as err:
+            return jsonify({'error': str(err)}), 500
+
 
 @app.route('/categories', methods=['POST', 'GET'])
 def manage_categories():
