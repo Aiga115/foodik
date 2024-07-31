@@ -9,7 +9,7 @@ CORS(app)
 # Environment variables for database connection
 DB_HOST = os.getenv('DB_HOST', 'localhost')
 DB_USER = os.getenv('DB_USER', 'root')
-DB_PASSWORD = os.getenv('DB_PASSWORD', 'root')
+DB_PASSWORD = os.getenv('DB_PASSWORD', 'aiga')
 DB_NAME = os.getenv('DB_NAME', 'foodikdb')
 
 # Connect to MySQL database
@@ -187,6 +187,48 @@ def add_food_item():
         return jsonify({'error': str(err)}), 500
 
     return jsonify({'message': 'Food item added successfully', 'id': food_item_id}), 201
+
+@app.route('/food_items/<int:food_item_id>', methods=['PUT'])
+def update_food_item(food_item_id):
+    data = request.json
+    name = data.get('name')
+    price = data.get('price')
+    quantity = data.get('quantity')
+    description = data.get('description')
+    category_id = data.get('category_id')
+
+    if not name or price is None or quantity is None or not category_id:
+        return jsonify({'error': 'Food item name, price, quantity, and category ID are required'}), 400
+
+    try:
+        mydb = get_db_connection()
+        cursor = mydb.cursor()
+        cursor.execute("""
+            UPDATE food_items 
+            SET name = %s, price = %s, quantity = %s, description = %s, category_id = %s
+            WHERE id = %s
+        """, (name, price, quantity, description, category_id, food_item_id))
+        mydb.commit()
+        cursor.close()
+        mydb.close()
+    except mysql.connector.Error as err:
+        return jsonify({'error': str(err)}), 500
+
+    return jsonify({'message': 'Food item updated successfully'}), 200
+
+@app.route('/food_items/<int:food_item_id>', methods=['DELETE'])
+def delete_food_item(food_item_id):
+    try:
+        mydb = get_db_connection()
+        cursor = mydb.cursor()
+        cursor.execute("DELETE FROM food_items WHERE id = %s", (food_item_id,))
+        mydb.commit()
+        cursor.close()
+        mydb.close()
+    except mysql.connector.Error as err:
+        return jsonify({'error': str(err)}), 500
+
+    return jsonify({'message': 'Food item deleted successfully'}), 200
 
 @app.route('/menus_with_items', methods=['GET'])
 def get_menus_with_items():
