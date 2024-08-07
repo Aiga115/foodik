@@ -9,7 +9,7 @@ CORS(app)
 # Environment variables for database connection
 DB_HOST = os.getenv('DB_HOST', 'localhost')
 DB_USER = os.getenv('DB_USER', 'root')
-DB_PASSWORD = os.getenv('DB_PASSWORD', 'aiga')
+DB_PASSWORD = os.getenv('DB_PASSWORD', 'root')
 DB_NAME = os.getenv('DB_NAME', 'foodikdb')
 
 # Connect to MySQL database
@@ -143,6 +143,41 @@ def manage_menus():
             return jsonify(menus), 200
         except mysql.connector.Error as err:
             return jsonify({'error': str(err)}), 500
+
+@app.route('/menus/<int:menu_id>', methods=['PUT', 'DELETE'])
+def manage_single_menu(menu_id):
+    if request.method == 'PUT':
+        data = request.json
+        name = data.get('name')
+
+        if not name:
+            return jsonify({'error': 'Menu name is required'}), 400
+
+        try:
+            mydb = get_db_connection()
+            cursor = mydb.cursor()
+            cursor.execute("UPDATE menus SET name = %s WHERE id = %s", (name, menu_id))
+            mydb.commit()
+            cursor.close()
+            mydb.close()
+        except mysql.connector.Error as err:
+            return jsonify({'error': str(err)}), 500
+
+        return jsonify({'message': 'Menu updated successfully'}), 200
+
+    elif request.method == 'DELETE':
+        try:
+            mydb = get_db_connection()
+            cursor = mydb.cursor()
+            cursor.execute("DELETE FROM menus WHERE id = %s", (menu_id,))
+            mydb.commit()
+            cursor.close()
+            mydb.close()
+        except mysql.connector.Error as err:
+            return jsonify({'error': str(err)}), 500
+
+        return jsonify({'message': 'Menu deleted successfully'}), 200
+
 
 @app.route('/categories', methods=['POST', 'GET'])
 def manage_categories():

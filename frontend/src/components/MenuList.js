@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
 import FoodItemForm from "./FoodItemForm";
+import EditMenuModal from "./EditMenuModal"; // Import the modal component
 
 const MenuList = () => {
     const [menu, setMenu] = useState([]);
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [currentMenuItem, setCurrentMenuItem] = useState(null);
 
     const fetchMenus = async () => {
         try {
@@ -23,9 +26,40 @@ const MenuList = () => {
             if (response.ok) {
                 setMenu(menu.filter(menuItem => menuItem.id !== id));
                 alert("Successfully deleted!");
+            } else {
+                const errorData = await response.json();
+                console.error('Delete failed:', errorData);
             }
         } catch (error) {
-            console.log(error);
+            console.error('Error:', error);
+        }
+    };
+
+    const handleEditMenuItem = (menuItem) => {
+        setCurrentMenuItem(menuItem);
+        setShowEditModal(true);
+    };
+
+    const handleSaveMenuItem = async (menuItem) => {
+        try {
+            const response = await fetch(`http://127.0.0.1:5000/menus/${menuItem.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name: menuItem.name })
+            });
+
+            if (response.ok) {
+                setMenu(menu.map(item => (item.id === menuItem.id ? menuItem : item)));
+                setShowEditModal(false);
+                alert("Successfully updated!");
+            } else {
+                const errorData = await response.json();
+                console.error('Update failed:', errorData);
+            }
+        } catch (error) {
+            console.error('Error:', error);
         }
     };
 
@@ -41,7 +75,7 @@ const MenuList = () => {
                         <h2>{menuItem.name}</h2>
                         <div style={{ display: 'flex', gap: '0.25rem' }}>
                             <button onClick={() => handleDeleteMenuItem(menuItem.id)}>Delete</button>
-                            <button>Edit</button>
+                            <button onClick={() => handleEditMenuItem(menuItem)}>Edit</button>
                             <button>Add</button>
                         </div>
                     </div>
@@ -73,6 +107,14 @@ const MenuList = () => {
                     })}
                 </div>
             ))}
+            {currentMenuItem && (
+                <EditMenuModal 
+                    show={showEditModal} 
+                    onClose={() => setShowEditModal(false)} 
+                    menuItem={currentMenuItem} 
+                    onSave={handleSaveMenuItem} 
+                />
+            )}
         </div>
     );
 };
