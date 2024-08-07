@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useNavigate } from "react-router-dom";
-
+import { Link, useNavigate } from 'react-router-dom';
 
 const Login = ({ isLoggedIn, setLoggedIn, username, setUsername }) => {
   const [password, setPassword] = useState('');
@@ -30,9 +28,16 @@ const Login = ({ isLoggedIn, setLoggedIn, username, setUsername }) => {
         if (data.error) {
           alert(data.error);
         } else {
-          // No token is returned, so just set loggedIn to true
+          // Store token and user role in local storage
+          localStorage.setItem('token', data.token);
+          localStorage.setItem('role', data.user.role); // Assuming role is returned
           setLoggedIn(true);
-          navigate("/");
+          // Redirect based on role
+          if (data.user.role === 'admin') {
+            navigate('/admin-dashboard');
+          } else {
+            navigate('/');
+          }
         }
       })
       .catch((error) => {
@@ -40,7 +45,6 @@ const Login = ({ isLoggedIn, setLoggedIn, username, setUsername }) => {
         alert('An error occurred while processing your request');
       });
   };
-
 
   return (
     <div className="App">
@@ -65,6 +69,6 @@ const Login = ({ isLoggedIn, setLoggedIn, username, setUsername }) => {
       )}
     </div>
   );
-}
+};
 
 export default Login;

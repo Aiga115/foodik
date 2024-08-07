@@ -21,6 +21,34 @@ def get_db_connection():
         database=DB_NAME
     )
 
+# Helper function to decode token (for demonstration, replace with actual implementation)
+def decode_token(token):
+    # Placeholder function for token decoding
+    # Replace this with actual token decoding logic
+    return {'role': 'user'}  # Dummy response, replace with actual token logic
+
+# Role-based access decorator
+from functools import wraps
+
+def role_required(role):
+    def wrapper(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            token = request.headers.get('Authorization')
+            if not token:
+                return jsonify({'error': 'Token is missing'}), 403
+
+            try:
+                user_info = decode_token(token)  # Replace with actual token decoding
+                if user_info['role'] != role:
+                    return jsonify({'error': 'Unauthorized'}), 403
+            except Exception as e:
+                return jsonify({'error': str(e)}), 403
+
+            return f(*args, **kwargs)
+        return decorated_function
+    return wrapper
+
 @app.route('/register', methods=['POST'])
 def register():
     data = request.json
@@ -28,6 +56,7 @@ def register():
     password = data.get('password')
     email = data.get('email')
     phoneNumber = data.get('phoneNumber')
+    role = data.get('role', 'user')  # Default to 'user' if not provided
 
     if not username or not password:
         return jsonify({'error': 'Username and password are required'}), 400
@@ -42,8 +71,8 @@ def register():
             return jsonify({'error': 'Username already exists. Please choose a different one.'}), 409
 
         cursor.execute(
-            "INSERT INTO users (username, password, email, phoneNumber) VALUES (%s, %s, %s, %s)",
-            (username, password, email, phoneNumber)
+            "INSERT INTO users (username, password, email, phoneNumber, role) VALUES (%s, %s, %s, %s, %s)",
+            (username, password, email, phoneNumber, role)
         )
         mydb.commit()
         cursor.close()
@@ -68,9 +97,11 @@ def login():
         if not user:
             return jsonify({'error': 'Invalid username or password'}), 401
 
+        # Example response with token and role
         response = {
             'message': 'Login successful',
-            'user': {'id': user[0], 'username': user[1]}
+            'token': 'your_generated_jwt_token_here',  # Replace with actual token generation
+            'user': {'id': user[0], 'username': user[1], 'role': user[4]}  # Assuming role is in user[4]
         }
         cursor.close()
         mydb.close()
@@ -112,18 +143,6 @@ def manage_menus():
             return jsonify(menus), 200
         except mysql.connector.Error as err:
             return jsonify({'error': str(err)}), 500
-    elif request.method== 'DELETE':
-        try:
-            mydb = get_db_connection()
-            cursor = mydb.cursor(dictionary=True)
-            cursor.execute("SELECT * FROM menus")
-            menus = cursor.fetchall()
-            cursor.close()
-            mydb.close()
-            return jsonify(menus), 200
-        except mysql.connector.Error as err:
-            return jsonify({'error': str(err)}), 500
-
 
 @app.route('/categories', methods=['POST', 'GET'])
 def manage_categories():

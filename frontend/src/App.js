@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Home from './pages/Home';
+import AdminHomePage from './pages/admin/AdminHomePage';
 import Header from './components/Header/Header';
 
 function App() {
@@ -30,7 +31,6 @@ function AppContent({ isLoggedIn, setLoggedIn, username, setUsername }) {
     setLoggedIn(false);
     navigate("/login");
   };
-  console.log("")
 
   return (
     <div
@@ -43,6 +43,7 @@ function AppContent({ isLoggedIn, setLoggedIn, username, setUsername }) {
       {isLoggedIn && <Header username={username} onLogout={handleLogout} />}
       <Routes>
         <Route path="/" element={isLoggedIn ? <Home /> : <Navigate to="/register" />} />
+        <Route path="/admin-dashboard" element={isLoggedIn ? <AdminHomePage /> : <Navigate to="/register" />} />
         <Route path="/login" element={<Login isLoggedIn={isLoggedIn} setLoggedIn={setLoggedIn} username={username} setUsername={setUsername} />} />
         <Route path="/register" element={<Register isLoggedIn={isLoggedIn} setLoggedIn={setLoggedIn} />} />
         {/* Redirect to home if any undefined route */}
