@@ -3,7 +3,6 @@ import FoodItemForm from "./FoodItemForm";
 
 const MenuList = () => {
     const [menu, setMenu] = useState([]);
-    const [menuId, setMenuId] = useState();
 
     const fetchMenus = async () => {
         try {
