@@ -30,6 +30,7 @@ function AppContent({ isLoggedIn, setLoggedIn, username, setUsername }) {
     setLoggedIn(false);
     navigate("/login");
   };
+  console.log("")
 
   return (
     <div
