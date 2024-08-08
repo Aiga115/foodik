@@ -9,7 +9,7 @@ CORS(app)
 # Environment variables for database connection
 DB_HOST = os.getenv('DB_HOST', 'localhost')
 DB_USER = os.getenv('DB_USER', 'root')
-DB_PASSWORD = os.getenv('DB_PASSWORD', 'aiga')
+DB_PASSWORD = os.getenv('DB_PASSWORD', 'root')
 DB_NAME = os.getenv('DB_NAME', 'foodikdb')
 
 # Connect to MySQL database
@@ -213,6 +213,42 @@ def manage_categories():
             return jsonify(categories), 200
         except mysql.connector.Error as err:
             return jsonify({'error': str(err)}), 500
+        
+
+@app.route('/categories/<int:category_id>', methods=['PUT'])
+def update_category(category_id):
+    data = request.json
+    name = data.get('name')
+    menu_id = data.get('menu_id')
+
+    if not name or not menu_id:
+        return jsonify({'error': 'Category name and menu ID are required'}), 400
+
+    try:
+        mydb = get_db_connection()
+        cursor = mydb.cursor()
+        cursor.execute("UPDATE categories SET name = %s, menu_id = %s WHERE id = %s", (name, menu_id, category_id))
+        mydb.commit()
+        cursor.close()
+        mydb.close()
+    except mysql.connector.Error as err:
+        return jsonify({'error': str(err)}), 500
+
+    return jsonify({'message': 'Category updated successfully'}), 200
+
+@app.route('/categories/<int:category_id>', methods=['DELETE'])
+def delete_category(category_id):
+    try:
+        mydb = get_db_connection()
+        cursor = mydb.cursor()
+        cursor.execute("DELETE FROM categories WHERE id = %s", (category_id,))
+        mydb.commit()
+        cursor.close()
+        mydb.close()
+    except mysql.connector.Error as err:
+        return jsonify({'error': str(err)}), 500
+
+    return jsonify({'message': 'Category deleted successfully'}), 200
 
 @app.route('/food_items', methods=['POST'])
 def add_food_item():

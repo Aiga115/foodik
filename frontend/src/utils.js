@@ -98,15 +98,42 @@ export const handleAddCategoryItem = async (name, menuItem, onModalClose) => {
     }
 };
 
-export const handleDeleteCategoryItem = async () => {
-
+export const handleDeleteCategoryItem = async (id) => {
+    try {
+        const response = await fetch(`http://127.0.0.1:5000/categories/${id}`, { method: 'DELETE' });
+        if (response.ok) {
+            alert("Successfully deleted!");
+        } else {
+            const errorData = await response.json();
+            console.error('Delete failed:', errorData);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
 };
 
-export const handleSaveCategoryItem = async () => {
 
+export const handleSaveCategoryItem = async (categoryItem, menuItemId, onModalClose) => {
+    try {
+        const response = await fetch(`http://127.0.0.1:5000/categories/${categoryItem.id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: categoryItem.name, menu_id: menuItemId })
+        });
+
+        if (response.ok) {
+            onModalClose();
+            alert("Successfully updated!");
+        } else {
+            const errorData = await response.json();
+            console.error('Update failed:', errorData);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
 };
 
-// foot item api
+// food item api
 export const handleAddFoodItem = async (name, price, quantity, description, category, onModalClose) => {
     try {
         const response = await fetch('http://127.0.0.1:5000/food_items', {

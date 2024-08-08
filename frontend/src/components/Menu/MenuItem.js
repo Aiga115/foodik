@@ -2,11 +2,13 @@ import React from "react";
 import { useState } from "react";
 import FoodItemForm from "./FoodItemForm";
 import AddFoodItemModal from "./AddFoodItemModal";
-import { handleAddFoodItem } from "../../utils";
+import EditCategoryModal from "./EditCategoryModal";
+import { handleAddFoodItem, handleDeleteCategoryItem, handleSaveCategoryItem } from "../../utils";
 
 const MenuItem = ({ menuItem, handleDeleteMenuItem, handleEditMenuItem, handleAddCategory }) => {
     const [currentCategoryItem, setCurrentCategoryItem] = useState(null);
     const [showFoodItemModal, setShowFoodItemModal] = useState(false);
+    const [showEditCategoryModal, setShowEditCategoryModal] = useState(false);
 
     const handleAddClick = (categoryItem) => {
         setCurrentCategoryItem(categoryItem);
@@ -15,6 +17,15 @@ const MenuItem = ({ menuItem, handleDeleteMenuItem, handleEditMenuItem, handleAd
 
     const handleModalClose = () => {
         setShowFoodItemModal(false);
+    }
+
+    const handleEditCategoryItem = (categoryItem) => {
+        setCurrentCategoryItem(categoryItem);
+        setShowEditCategoryModal(true)
+    };
+
+    const handleEditModalClose = () => {
+        setShowEditCategoryModal(false);
     }
 
     if (!menuItem) return null;
@@ -38,8 +49,8 @@ const MenuItem = ({ menuItem, handleDeleteMenuItem, handleEditMenuItem, handleAd
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                                 <h3>{categoryItem?.name}</h3>
                                 <div style={{ display: 'flex', gap: '0.25rem' }}>
-                                    <button>Delete</button>
-                                    <button>Edit</button>
+                                    <button onClick={() => handleDeleteCategoryItem(categoryItem.id)}>Delete</button>
+                                    <button onClick={() => handleEditCategoryItem(categoryItem)}>Edit</button>
                                     <button onClick={() => handleAddClick(categoryItem)}>Add</button>
                                 </div>
                             </div>
@@ -60,6 +71,12 @@ const MenuItem = ({ menuItem, handleDeleteMenuItem, handleEditMenuItem, handleAd
                 onClose={() => setShowFoodItemModal(false)}
                 menuItem={currentCategoryItem}
                 onSave={(name, price, quantity, description) => handleAddFoodItem(name, price, quantity, description, currentCategoryItem, handleModalClose)}
+            />
+            <EditCategoryModal
+                show={showEditCategoryModal}
+                onClose={() => setShowEditCategoryModal(false)}
+                categoryItem={currentCategoryItem}
+                onSave={(categoryItem) => handleSaveCategoryItem(categoryItem, menuItem.id, handleEditModalClose)}
             />
         </>
     )

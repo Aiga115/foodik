@@ -15,37 +15,50 @@ const FoodItemForm = ({ food, categoryId }) => {
                 maxWidth: '600px',
                 display: 'grid',
                 gap: '10px',
-                gridTemplateColumns: 'auto auto auto'
-            }}
-            >
-                <input
-                    type="text"
-                    placeholder="Name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                />
-                <input
-                    type="number"
-                    placeholder="Price"
-                    value={price}
-                    onChange={(e) => setPrice(e.target.value)}
-                />
-                <input
-                    type="number"
-                    placeholder="Quantity"
-                    value={quantity}
-                    onChange={(e) => setQuantity(e.target.value)}
-                />
-                <input
-                    type="text"
-                    placeholder="Description"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                />
+                gridTemplateColumns: 'auto auto auto',
+                alignItems: 'center'
+            }}>
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "start" }}>
+                    <label htmlFor="name">Name:</label>
+                    <input
+                        type="text"
+                        placeholder="Name"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                    />
+                    </div>
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "start" }}>
+                    <label htmlFor="price">Price:</label>
+                    <input
+                        type="number"
+                        placeholder="Price"
+                        value={price}
+                        onChange={(e) => setPrice(e.target.value)}
+                    />
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "start" }}>
+                    <label htmlFor="quantity">Quantity:</label>
+                    <input
+                        type="number"
+                        placeholder="Quantity"
+                        value={quantity}
+                        onChange={(e) => setQuantity(e.target.value)}
+                    />
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "start" }}>
+                    <label htmlFor="description">Description:</label>
+                    <input
+                        type="text"
+                        placeholder="Description"
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                    />
+                </div>
             </div>
-            <div>
+    
+            <div style={{ display: 'flex', gap: '10px' }}>
                 <button onClick={() => { handleDeleteFoodItem(food) }}>Delete</button>
-                <button onClick={() => { handleSaveFoodItem(food, name, price, description, quantity, categoryId)}}>Save</button>
+                <button onClick={() => { handleSaveFoodItem(food, name, price, quantity, description, categoryId)}}>Save</button>
             </div>
         </div>
     );
