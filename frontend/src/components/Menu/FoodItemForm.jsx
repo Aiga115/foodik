@@ -1,53 +1,13 @@
 import React, { useState } from "react";
+import { handleDeleteFoodItem, handleSaveFoodItem } from "../../utils";
 
-const FoodItemForm = ({ food, categoryId, onUpdate }) => {
+
+const FoodItemForm = ({ food, categoryId }) => {
     const [name, setName] = useState(food.name);
     const [price, setPrice] = useState(food.price);
     const [quantity, setQuantity] = useState(food.quantity);
     const [description, setDescription] = useState(food.description);
 
-    const handleDeleteFoodItem = async () => {
-        try {
-            const response = await fetch(`http://127.0.0.1:5000/food_items/${food.id}`, {
-                method: 'DELETE',
-            });
-
-            if (response.ok) {
-                alert("Successfully deleted!");
-                onUpdate();
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
-    const handleEditFoodItem = async () => {
-        try {
-            const response = await fetch(`http://127.0.0.1:5000/food_items/${food.id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    name,
-                    price,
-                    quantity,
-                    description,
-                    category_id: categoryId,
-                }),
-            });
-
-            if (response.ok) {
-                alert("Successfully updated!");
-                onUpdate();
-            } else {
-                const result = await response.json();
-                alert(`Failed to update: ${result.error}`);
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    };
 
     return (
         <div style={{ display: 'flex', alignItems: 'start', justifyContent: 'space-between', width: '100%', marginTop: '12px' }}>
@@ -84,8 +44,8 @@ const FoodItemForm = ({ food, categoryId, onUpdate }) => {
                 />
             </div>
             <div>
-                <button onClick={handleDeleteFoodItem}>Delete</button>
-                <button onClick={handleEditFoodItem}>Save</button>
+                <button onClick={() => { handleDeleteFoodItem(food) }}>Delete</button>
+                <button onClick={() => { handleSaveFoodItem(food, name, price, description, quantity, categoryId)}}>Save</button>
             </div>
         </div>
     );
