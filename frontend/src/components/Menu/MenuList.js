@@ -54,10 +54,10 @@ const MenuList = () => {
     }
 
     return (
-        <div style={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column', margin: '40px', gap: '100px' }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                <p>Do you want to add another menu? Please click on button</p>
-                <button onClick={handleShowAddMenuModal}>Add Menu</button>
+        <div style={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column', width: "100%" }}>
+            <div class="heading" style={{ width: "100%" }}>
+                <h3>Do you want to add another menu?</h3>
+                <button onClick={handleShowAddMenuModal} className="btn">Add Menu</button>
             </div>
             {menu?.map((menuItem) => (
                 <MenuItem
