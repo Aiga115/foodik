@@ -1,9 +1,16 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const ProfileModal = ({ open, onClose, username, onLogout }) => {
+    const navigate = useNavigate();
 
     if(!open){
         return null;
+    }
+
+    const handleNavigateToProfile = () => {
+        navigate("/profile")
+        onClose()
     }
 
     const handleLogoutBtnClick = () => {
@@ -25,8 +32,8 @@ const ProfileModal = ({ open, onClose, username, onLogout }) => {
         }}>
             <h2 className="name">Hi! {username}</h2>
             <div className="flex">
-                <a href="#" className="btn">profile</a>
-                <a href="#" className="delete-btn" onClick={handleLogoutBtnClick}>logout</a>
+                <button className="btn" onClick={handleNavigateToProfile}>Profile</button>
+                <button className="delete-btn" onClick={handleLogoutBtnClick}>Logout</button>
             </div>
         </div >
     )

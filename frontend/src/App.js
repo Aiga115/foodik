@@ -11,6 +11,7 @@ import Register from './pages/Register';
 import Home from './pages/Home';
 import AdminHomePage from './pages/admin/AdminHomePage';
 import Header from './components/Header/Header';
+import ProfilePage from './pages/ProfilePage';
 
 function App() {
   const [isLoggedIn, setLoggedIn] = useState(false);
@@ -32,6 +33,7 @@ function AppContent({ isLoggedIn, setLoggedIn, username, setUsername }) {
     navigate("/login");
   };
 
+
   return (
     <div
       style={{
@@ -46,6 +48,7 @@ function AppContent({ isLoggedIn, setLoggedIn, username, setUsername }) {
         <Route path="/admin-dashboard" element={isLoggedIn ? <AdminHomePage /> : <Navigate to="/register" />} />
         <Route path="/login" element={<Login isLoggedIn={isLoggedIn} setLoggedIn={setLoggedIn} username={username} setUsername={setUsername} />} />
         <Route path="/register" element={<Register isLoggedIn={isLoggedIn} setLoggedIn={setLoggedIn} />} />
+        <Route path="/profile" element={isLoggedIn ? <ProfilePage /> : <Navigate to="/register" />} />
         {/* Redirect to home if any undefined route */}
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
