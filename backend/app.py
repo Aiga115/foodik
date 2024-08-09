@@ -110,6 +110,43 @@ def login():
 
     return jsonify(response), 200
 
+
+@app.route('/user/<int:user_id>', methods=['PUT'])
+def update_user_profile(user_id):
+    data = request.json
+    username = data.get('username')
+    email = data.get('email')
+    phoneNumber = data.get('phoneNumber')
+
+    if not username or not email or not phoneNumber:
+        return jsonify({'error': 'Username, email, and phone number are required'}), 400
+
+    try:
+        mydb = get_db_connection()
+        cursor = mydb.cursor()
+        
+        # Check if the username or email already exists for another user
+        cursor.execute("SELECT * FROM users WHERE (username = %s OR email = %s) AND id != %s", (username, email, user_id))
+        existing_user = cursor.fetchone()
+        
+        if existing_user:
+            return jsonify({'error': 'Username or email already exists. Please choose a different one.'}), 409
+        
+        cursor.execute("""
+            UPDATE users 
+            SET username = %s, email = %s, phoneNumber = %s
+            WHERE id = %s
+        """, (username, email, phoneNumber, user_id))
+        mydb.commit()
+        
+        cursor.close()
+        mydb.close()
+    except mysql.connector.Error as err:
+        return jsonify({'error': str(err)}), 500
+
+    return jsonify({'message': 'User profile updated successfully'}), 200
+
+
 @app.route('/menus', methods=['POST', 'GET'])
 def manage_menus():
     if request.method == 'POST':
