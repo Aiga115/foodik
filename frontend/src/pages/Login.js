@@ -5,7 +5,9 @@ const Login = ({ isLoggedIn, setLoggedIn, username, setUsername }) => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = () => {
+  const handleLogin = (e) => {
+    e.preventDefault();
+
     if (!username || !password) {
       alert('Please enter both username and password');
       return;
@@ -28,11 +30,9 @@ const Login = ({ isLoggedIn, setLoggedIn, username, setUsername }) => {
         if (data.error) {
           alert(data.error);
         } else {
-          // Store token and user role in local storage
           localStorage.setItem('token', data.token);
-          localStorage.setItem('role', data.user.role); // Assuming role is returned
+          localStorage.setItem('role', data.user.role);
           setLoggedIn(true);
-          // Redirect based on role
           if (data.user.role === 'admin') {
             navigate('/admin-dashboard');
           } else {
@@ -42,32 +42,39 @@ const Login = ({ isLoggedIn, setLoggedIn, username, setUsername }) => {
       })
       .catch((error) => {
         console.error('Error:', error);
-        alert('An error occurred while processing your request');
+        alert(`An error occurred: ${error.message}`);
       });
   };
 
   return (
-    <div className="App">
+    <section className="form-container" style={{ margin: "auto" }}>
       {!isLoggedIn && (
-        <div>
-          <h2>Login</h2>
+        <form onSubmit={handleLogin}>
+          <h3>Login now</h3>
           <input
             type="text"
-            placeholder="Username"
+            placeholder="Enter your username"
+            required
+            className="box"
+            maxLength="50"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
           <input
             type="password"
-            placeholder="Password"
+            name="pass"
+            required
+            placeholder="Enter your password"
+            className="box"
+            maxLength="50"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <button onClick={handleLogin}>Login</button>
-          <Link to='/register'>Not registered yet? Sign up here</Link>
-        </div>
+          <button type="submit" className="btn">Login</button>
+          <p>Not registered yet? <Link to='/register'>Sign up here</Link></p>
+        </form>
       )}
-    </div>
+    </section>
   );
 };
 
