@@ -41,11 +41,11 @@ const MenuList = () => {
         return (
             <>
                 <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column', margin: 'auto', gap: '10px' }}>
-                    <p>There is no menu. Please add one</p>
-                    <button onClick={handleShowAddMenuModal}>Add Menu</button>
+                    <h1>There is no menu. Please add one</h1>
+                    <button onClick={handleShowAddMenuModal} className="btn">Add Menu</button>
                 </div>
                 <AddMenuModal
-                    show={showAddMenuModal}
+                    open={showAddMenuModal}
                     onClose={() => setShowAddMenuModal(false)}
                     onSave={(name) => handleAddMenuItem(name, handleCloseAddMenuModal)}
                 />
@@ -76,7 +76,7 @@ const MenuList = () => {
             ))}
             {currentMenuItem && (
                 <EditMenuModal
-                    show={showEditModal}
+                    open={showEditModal}
                     onClose={() => setShowEditModal(false)}
                     menuItem={currentMenuItem}
                     onSave={(menuItem) => handleSaveMenuItem(menuItem, menu, setMenu, handleEditModalClose)}
@@ -84,14 +84,14 @@ const MenuList = () => {
             )}
             {currentMenuItem && (
                 <AddCategoryModal
-                    show={showAddCategoryModal}
+                    open={showAddCategoryModal}
                     onClose={() => setShowCategoryModal(false)}
                     menuItem={currentMenuItem}
                     onSave={(name) => handleAddCategoryItem(name, currentMenuItem, handleAddModalClose)}
                 />
             )}
             <AddMenuModal
-                show={showAddMenuModal}
+                open={showAddMenuModal}
                 onClose={() => setShowAddMenuModal(false)}
                 onSave={(name) => handleAddMenuItem(name, handleCloseAddMenuModal)}
             />

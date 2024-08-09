@@ -67,13 +67,13 @@ const MenuItem = ({ menuItem, handleDeleteMenuItem, handleEditMenuItem, handleAd
                 })}
             </div>
             <AddFoodItemModal
-                show={showFoodItemModal}
+                open={showFoodItemModal}
                 onClose={() => setShowFoodItemModal(false)}
                 menuItem={currentCategoryItem}
                 onSave={(name, price, quantity, description) => handleAddFoodItem(name, price, quantity, description, currentCategoryItem, handleModalClose)}
             />
             <EditCategoryModal
-                show={showEditCategoryModal}
+                open={showEditCategoryModal}
                 onClose={() => setShowEditCategoryModal(false)}
                 categoryItem={currentCategoryItem}
                 onSave={(categoryItem) => handleSaveCategoryItem(categoryItem, menuItem.id, handleEditModalClose)}
