@@ -110,6 +110,76 @@ def login():
 
     return jsonify(response), 200
 
+
+@app.route('/user/<string:username>', methods=['GET'])
+def get_user(username):
+    try:
+        mydb = get_db_connection()
+        cursor = mydb.cursor(dictionary=True)
+        cursor.execute("SELECT username, email, phoneNumber, role FROM users WHERE username = %s", (username,))
+        user = cursor.fetchone()
+        cursor.close()
+        mydb.close()
+
+        if not user:
+            return jsonify({'error': 'User not found'}), 404
+
+        return jsonify(user), 200
+    except mysql.connector.Error as err:
+        return jsonify({'error': str(err)}), 500
+
+
+
+@app.route('/user/<string:username>', methods=['PUT'])
+def update_user(username):
+    data = request.json
+    new_username = data.get('username')
+    email = data.get('email')
+    phoneNumber = data.get('phoneNumber')
+    role = data.get('role')
+
+    if not new_username and not email and not phoneNumber and not role:
+        return jsonify({'error': 'No data provided to update'}), 400
+
+    try:
+        mydb = get_db_connection()
+        cursor = mydb.cursor()
+
+        # Build the update query dynamically based on provided fields
+        update_fields = []
+        update_values = []
+
+        if new_username:
+            update_fields.append("username = %s")
+            update_values.append(new_username)
+        if email:
+            update_fields.append("email = %s")
+            update_values.append(email)
+        if phoneNumber:
+            update_fields.append("phoneNumber = %s")
+            update_values.append(phoneNumber)
+        if role:
+            update_fields.append("role = %s")
+            update_values.append(role)
+
+        update_values.append(username)
+
+        update_query = f"UPDATE users SET {', '.join(update_fields)} WHERE username = %s"
+
+        cursor.execute(update_query, tuple(update_values))
+        mydb.commit()
+
+        if cursor.rowcount == 0:
+            return jsonify({'error': 'User not found'}), 404
+
+        cursor.close()
+        mydb.close()
+    except mysql.connector.Error as err:
+        return jsonify({'error': str(err)}), 500
+
+    return jsonify({'message': 'User updated successfully'}), 200
+
+
 @app.route('/menus', methods=['POST', 'GET'])
 def manage_menus():
     if request.method == 'POST':
