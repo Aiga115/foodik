@@ -2,26 +2,25 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const ProfilePage = () => {
+const ProfilePage = ({ user }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState(""); // Typically, you won't fetch/display this
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserData = async () => {
       setLoading(true);
       try {
-        const response = await axios.get("http://localhost:5000/user/admin");
+        const response = await axios.get(`http://localhost:5000/user/${user}`);
         const userData = response.data;
         setUsername(userData.username);
         setEmail(userData.email);
         setPhoneNumber(userData.phoneNumber);
         // Do not set password for security reasons
- 
+
         setLoading(false);
       } catch (err) {
         setLoading(false);
@@ -44,7 +43,7 @@ const ProfilePage = () => {
 
     try {
       const response = await axios.put(
-        `http://127.0.0.1:5000/user/${username}`,
+        `http://127.0.0.1:5000/user/${user}`,
         {
           username,
           password, // Include only if needed
@@ -68,7 +67,7 @@ const ProfilePage = () => {
       setLoading(false);
       setError(
         err.response?.data?.error ||
-          "An error occurred while processing your request"
+        "An error occurred while processing your request"
       );
     }
   };

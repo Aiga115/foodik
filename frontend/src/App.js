@@ -48,7 +48,7 @@ function AppContent({ isLoggedIn, setLoggedIn, username, setUsername }) {
         <Route path="/admin-dashboard" element={isLoggedIn ? <AdminHomePage /> : <Navigate to="/register" />} />
         <Route path="/login" element={<Login isLoggedIn={isLoggedIn} setLoggedIn={setLoggedIn} username={username} setUsername={setUsername} />} />
         <Route path="/register" element={<Register isLoggedIn={isLoggedIn} setLoggedIn={setLoggedIn} />} />
-        <Route path="/profile" element={isLoggedIn ? <ProfilePage /> : <Navigate to="/register" />} />
+        <Route path="/profile" element={isLoggedIn ? <ProfilePage user={username} /> : <Navigate to="/register" />} />
         {/* Redirect to home if any undefined route */}
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>

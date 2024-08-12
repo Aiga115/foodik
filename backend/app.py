@@ -128,8 +128,6 @@ def get_user(username):
     except mysql.connector.Error as err:
         return jsonify({'error': str(err)}), 500
 
-
-
 @app.route('/user/<string:username>', methods=['PUT'])
 def update_user(username):
     data = request.json
@@ -163,6 +161,9 @@ def update_user(username):
             update_values.append(role)
 
         update_values.append(username)
+
+        if not update_fields:
+            return jsonify({'error': 'No data provided to update'}), 400
 
         update_query = f"UPDATE users SET {', '.join(update_fields)} WHERE username = %s"
 

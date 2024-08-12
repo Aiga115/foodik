@@ -1,5 +1,6 @@
 import React from "react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import ProfileModal from "./ProfileModal";
 
 const Header = ({ username, onLogout }) => {
@@ -20,24 +21,24 @@ const Header = ({ username, onLogout }) => {
 
             <section className="flex">
 
-                <a href="#" className="logo">foodik 😋</a>
+                <Link to={isAdmin ? "/admin-dashboard" : "/"} className="logo">foodik 😋</Link>
 
                 {isAdmin ? (
                     <nav className="navbar">
-                        <a href="/admin-dashboard">admin dashboard</a>
+                        <Link to="/admin-dashboard">admin dashboard</Link>
                     </nav>
                 ) : (
                     <nav className="navbar">
-                        <a href="#">home</a>
-                        <a href="#">about</a>
-                        <a href="#">menu</a>
-                        <a href="#">orders</a>
-                        <a href="#">contact</a>
+                        <Link to="#">home</Link>
+                        <Link to="#">about</Link>
+                        <Link to="#">menu</Link>
+                        <Link to="#">orders</Link>
+                        <Link to="#">contact</Link>
                     </nav>
                 )}
 
                 <div className="icons">
-                    {isAdmin ? <></> : <a href="cart.php"><i className="fas fa-shopping-cart"></i><span>4</span></a>}
+                    {isAdmin ? <></> : <Link to="#"><i className="fas fa-shopping-cart"></i><span>4</span></Link>}
                     <div id="user-btn" className="fas fa-user" onClick={handleOpenProfileModal}></div>
                 </div>
 
