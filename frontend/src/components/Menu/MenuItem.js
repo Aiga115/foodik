@@ -1,9 +1,78 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import FoodItemForm from "./FoodItemForm";
 import AddFoodItemModal from "./AddFoodItemModal";
 import EditCategoryModal from "./EditCategoryModal";
 import { handleAddFoodItem, handleDeleteCategoryItem, handleSaveCategoryItem } from "../../utils";
+
+
+const styles = {
+    menuBox: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: '0.75rem',
+        justifyContent: 'space-between',
+    },
+    button: {
+        padding: "8px"
+    },
+    container: {
+        width: '100%',
+        marginTop: "40px"
+    },
+    header: {
+        fontSize: "30px"
+    },
+    innerContainer: {
+        padding: "80px"
+    },
+    title: {
+        fontSize: "24px"
+    },
+    categoryTitle: {
+        fontSize: "18px"
+    },
+    noCategories: {
+        fontSize: "20px"
+    },
+    buttonGroup: {
+        display: 'flex',
+        gap: '0.25rem'
+    },
+    categoryContainer: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: '2.75rem',
+        marginTop: "16px"
+    }
+}
+
+
+const MenuTitle = ({ name, onDelete, onEdit, onAdd }) => (
+    <div style={styles.menuBox}>
+        <h2 style={styles.title}>{name.charAt(0).toUpperCase() + name.slice(1)}</h2>
+        <div style={styles.buttonGroup}>
+            <button style={styles.button} onClick={onDelete} className="btn">Delete</button>
+            <button style={styles.button} onClick={onEdit} className="btn">Edit</button>
+            <button style={styles.button} onClick={onAdd} className="btn">Add</button>
+        </div>
+    </div>
+);
+
+const CategorySection = ({ categoryItem, onDeleteCategoryItem, onEditCategoryItem, onAddFoodItem }) => (
+    <div>
+        <div style={styles.categoryContainer}>
+            <h3 style={styles.categoryTitle}>{categoryItem.name.charAt(0).toUpperCase() + categoryItem.name.slice(1)}</h3>
+            <div style={styles.buttonGroup}>
+                <button style={styles.button} onClick={() => onDeleteCategoryItem(categoryItem.id)}>Delete</button>
+                <button style={styles.button} onClick={() => onEditCategoryItem(categoryItem)}>Edit</button>
+                <button style={styles.button} onClick={() => onAddFoodItem(categoryItem)}>Add</button>
+            </div>
+        </div>
+        {categoryItem.items?.map((item) => (
+            <FoodItemForm key={item.id} food={item} categoryId={categoryItem.id} />
+        ))}
+    </div>
+);
 
 const MenuItem = ({ menuItem, handleDeleteMenuItem, handleEditMenuItem, handleAddCategory }) => {
     const [currentCategoryItem, setCurrentCategoryItem] = useState(null);
@@ -13,73 +82,61 @@ const MenuItem = ({ menuItem, handleDeleteMenuItem, handleEditMenuItem, handleAd
     const handleAddClick = (categoryItem) => {
         setCurrentCategoryItem(categoryItem);
         setShowFoodItemModal(true);
-    }
+    };
 
-    const handleModalClose = () => {
-        setShowFoodItemModal(false);
-    }
+    const handleModalClose = () => setShowFoodItemModal(false);
 
     const handleEditCategoryItem = (categoryItem) => {
         setCurrentCategoryItem(categoryItem);
-        setShowEditCategoryModal(true)
+        setShowEditCategoryModal(true);
     };
 
-    const handleEditModalClose = () => {
-        setShowEditCategoryModal(false);
-    }
+    const handleEditModalClose = () => setShowEditCategoryModal(false);
 
     if (!menuItem) return null;
 
     return (
-        <>
-            <div style={{ width: '100%', maxWidth: 800 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                    <h2>{menuItem.name}</h2>
-                    <div style={{ display: 'flex', gap: '0.25rem' }}>
-                        <button onClick={() => handleDeleteMenuItem(menuItem.id)}>Delete</button>
-                        <button onClick={() => handleEditMenuItem(menuItem)}>Edit</button>
-                        <button onClick={() => handleAddCategory(menuItem)}>Add</button>
-                    </div>
-                </div>
+        <div style={styles.container}>
+            <h3 style={styles.header}>Menu</h3>
+            <div style={styles.innerContainer}>
+                <MenuTitle
+                    name={menuItem.name}
+                    onDelete={() => handleDeleteMenuItem(menuItem.id)}
+                    onEdit={() => handleEditMenuItem(menuItem)}
+                    onAdd={() => handleAddCategory(menuItem)}
+                />
                 {Object.keys(menuItem.categories)?.map((category) => {
-                    if (category === 'null') return null;
+                    if (category === 'null') return <h3 style={styles.noCategories} key="no-categories">There are no categories</h3>;
                     const categoryItem = menuItem.categories[category];
                     return (
-                        <div key={categoryItem?.id} style={{ marginTop: '16px', border: '1px solid grey', padding: '10px' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                                <h3>{categoryItem?.name}</h3>
-                                <div style={{ display: 'flex', gap: '0.25rem' }}>
-                                    <button onClick={() => handleDeleteCategoryItem(categoryItem.id)}>Delete</button>
-                                    <button onClick={() => handleEditCategoryItem(categoryItem)}>Edit</button>
-                                    <button onClick={() => handleAddClick(categoryItem)}>Add</button>
-                                </div>
-                            </div>
-                            {categoryItem.items?.map((item) => (
-                                <React.Fragment key={item.id}>
-                                    <FoodItemForm
-                                        food={item}
-                                        categoryId={categoryItem?.id}
-                                    />
-                                </React.Fragment>
-                            ))}
-                        </div>
+                        <CategorySection
+                            key={categoryItem?.id}
+                            categoryItem={categoryItem}
+                            onDeleteCategoryItem={handleDeleteCategoryItem}
+                            onEditCategoryItem={handleEditCategoryItem}
+                            onAddFoodItem={handleAddClick}
+                        />
                     );
                 })}
             </div>
             <AddFoodItemModal
                 open={showFoodItemModal}
-                onClose={() => setShowFoodItemModal(false)}
+                onClose={handleModalClose}
                 menuItem={currentCategoryItem}
-                onSave={(name, price, quantity, description) => handleAddFoodItem(name, price, quantity, description, currentCategoryItem, handleModalClose)}
+                onSave={(name, price, quantity, description) =>
+                    handleAddFoodItem(name, price, quantity, description, currentCategoryItem, handleModalClose)
+                }
             />
             <EditCategoryModal
                 open={showEditCategoryModal}
-                onClose={() => setShowEditCategoryModal(false)}
+                onClose={handleEditModalClose}
                 categoryItem={currentCategoryItem}
-                onSave={(categoryItem) => handleSaveCategoryItem(categoryItem, menuItem.id, handleEditModalClose)}
+                onSave={(categoryItem) =>
+                    handleSaveCategoryItem(categoryItem, menuItem.id, handleEditModalClose)
+                }
             />
-        </>
-    )
-}
+        </div>
+    );
+};
 
 export default MenuItem;
