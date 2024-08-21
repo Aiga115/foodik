@@ -1,8 +1,14 @@
 import React from "react";
 import DishIcon from "../assets/dish.png";
+import { useNavigate } from "react-router-dom";
 
 
 const Card = ({ name, price, onAddToBasket }) => {
+  const navigate = useNavigate();
+
+  const handleGoToCart = () => {
+    navigate("/cart")
+  }
   return (
     <form action="" method="post" class="box">
       <input
@@ -27,6 +33,7 @@ const Card = ({ name, price, onAddToBasket }) => {
         type="submit"
         class="fas fa-shopping-cart"
         name="add_to_cart"
+        onClick={handleGoToCart}
       ></button>
       <img src={DishIcon} alt="" style={{ width: "50px", height: "50px" }}  />
       <a
@@ -55,6 +62,7 @@ const Card = ({ name, price, onAddToBasket }) => {
       </div>
     </form>
   );
-};
+
+  };
 
 export default Card;
