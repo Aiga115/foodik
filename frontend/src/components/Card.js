@@ -5,32 +5,30 @@ import DishIcon from "../assets/dish.png";
 const Card = ({ name, price, onAddToBasket }) => {
   return (
     <form action="" method="post" class="box">
-      <input type="hidden" name="pid" value="" />
       <input
-        type="hidden"
+        // type="hidden"
         name="name"
-        value="<?= $fetch_products['name']; ?>"
+        value="burger"
+
       />
-      <input
-        type="hidden"
+      {/* <input
+        // type="hidden"
         name="price"
-        value="<?= $fetch_products['price']; ?>"
-      />
-      <input
-        type="hidden"
+        value="20"
+      /> */}
+      {/* <input
+        // type="hidden"
         name="image"
-        value="<?= $fetch_products['image']; ?>"
-      />
-      <a
-        href="quick_view.php?pid=<?= $fetch_products['id']; ?>"
-        class="fas fa-eye"
-      ></a>
+        //value="<?= $fetch_products['image']; ?>"
+        value={DishIcon}
+
+      /> */}
       <button
         type="submit"
         class="fas fa-shopping-cart"
         name="add_to_cart"
       ></button>
-      <img src="uploaded_img/<?= $fetch_products['image']; ?>" alt="" />
+      <img src={DishIcon} alt="" style={{ width: "50px", height: "50px" }}  />
       <a
         href="category.php?category=<?= $fetch_products['category']; ?>"
         class="cat"
@@ -38,6 +36,11 @@ const Card = ({ name, price, onAddToBasket }) => {
       <div class="name"></div>
       <div class="flex">
         <div class="price">
+        <input
+        // type="hidden"
+        name="price"
+        value="20"
+      />
           <span>$</span>
         </div>
         <input
