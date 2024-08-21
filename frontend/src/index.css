@@ -1169,7 +1169,6 @@ section {
 /* Tabs.css */
 
 .tabs {
-  margin-left: 200px;
   padding: 20px;
   display: flex;
   gap: 10px;
