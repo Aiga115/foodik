@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import ProfileModal from "./ProfileModal";
 
-const Header = ({ username, onLogout }) => {
+const Header = ({ username, onLogout, numberOfCartItems }) => {
     const [openProfileModal, setOpenProfileModal] = useState(false);
 
     const handleCloseProfileModal = () => {
@@ -38,7 +38,7 @@ const Header = ({ username, onLogout }) => {
                 )}
 
                 <div className="icons">
-                    {isAdmin ? <></> : <Link to="#"><i className="fas fa-shopping-cart"></i><span>4</span></Link>}
+                    {isAdmin ? <></> : <Link to="/cart"><i className="fas fa-shopping-cart"></i><span style={{ margin: 0 }}>{numberOfCartItems}</span></Link>}
                     <div id="user-btn" className="fas fa-user" onClick={handleOpenProfileModal}></div>
                 </div>
 

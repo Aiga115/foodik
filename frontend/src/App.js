@@ -12,27 +12,49 @@ import Home from './pages/Home';
 import AdminHomePage from './pages/admin/AdminHomePage';
 import Header from './components/Header/Header';
 import ProfilePage from './pages/ProfilePage';
+import CartPage from './pages/CartPage';
 
 function App() {
   const [isLoggedIn, setLoggedIn] = useState(false);
   const [username, setUsername] = useState('');
+  const [cartItems, setCartItems] = useState([]);
 
   return (
     <Router>
-      <AppContent isLoggedIn={isLoggedIn} setLoggedIn={setLoggedIn} username={username} setUsername={setUsername} />
+      <AppContent isLoggedIn={isLoggedIn} setLoggedIn={setLoggedIn} username={username} setUsername={setUsername} cartItems={cartItems} setCartItems={setCartItems} />
     </Router>
   );
 }
 
-function AppContent({ isLoggedIn, setLoggedIn, username, setUsername }) {
+function AppContent({ isLoggedIn, setLoggedIn, username, setUsername, cartItems, setCartItems }) {
   const navigate = useNavigate();
 
   const handleLogout = () => {
     localStorage.removeItem('token');
     setLoggedIn(false);
+    setCartItems([]);
     navigate("/login");
   };
 
+  const handleAddToCart = (item) => {
+    setCartItems(prevItems => {
+      // Check if the item already exists in the cart
+      const existingItemIndex = prevItems.findIndex(cartItem => cartItem.id === item.id);
+
+      if (existingItemIndex !== -1) {
+        // Update quantity if the item already exists
+        const updatedItems = [...prevItems];
+        updatedItems[existingItemIndex].quantity += item.quantity;
+        return updatedItems;
+      } else {
+        // Add new item to the cart
+        return [...prevItems, item];
+      }
+    });
+  }
+
+  const handleDeleteFromCart = () => {
+  }
 
   return (
     <div
@@ -42,13 +64,14 @@ function AppContent({ isLoggedIn, setLoggedIn, username, setUsername }) {
         minHeight: '100vh'
       }}
     >
-      {isLoggedIn && <Header username={username} onLogout={handleLogout} />}
+      {isLoggedIn && <Header username={username} onLogout={handleLogout} numberOfCartItems={cartItems.length} />}
       <Routes>
-        <Route path="/" element={isLoggedIn ? <Home /> : <Navigate to="/register" />} />
+        <Route path="/" element={isLoggedIn ? <Home handleAddToCart={handleAddToCart} /> : <Navigate to="/register" />} />
         <Route path="/admin-dashboard" element={isLoggedIn ? <AdminHomePage /> : <Navigate to="/register" />} />
         <Route path="/login" element={<Login isLoggedIn={isLoggedIn} setLoggedIn={setLoggedIn} username={username} setUsername={setUsername} />} />
         <Route path="/register" element={<Register isLoggedIn={isLoggedIn} setLoggedIn={setLoggedIn} />} />
         <Route path="/profile" element={isLoggedIn ? <ProfilePage user={username} /> : <Navigate to="/register" />} />
+        <Route path="/cart" element={<CartPage cartItems={cartItems} handleDeleteCartItem={handleDeleteFromCart} />} />
         {/* Redirect to home if any undefined route */}
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>

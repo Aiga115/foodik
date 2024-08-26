@@ -1,23 +1,19 @@
 import React from 'react';
-const Tabs = ({ activeItem }) => {
-    const categories = {
-      Salad: ['Seosanal', 'Fruit'],
-      Burger: ['Chicken', 'Beef'],
-      Shawarma: ['Chicken Shawarma', 'Beef Shawarma'],
-      Pizza: ['Classic', 'Non Classic'],
-      Sauce: ['Spicy', 'Sweet'],
-      Beverages: ['Soda', 'Water'],
-    };
-  
-    return (
-      <div className="tabs">
-        {categories[activeItem].map((category, index) => (
-          <button key={index} className="tab">
-            {category}
-          </button>
-        ))}
-      </div>
-    );
-  };
-  
-  export default Tabs;
+
+const Tabs = ({ categories, activeCategory, onCategorySelect }) => {
+  return (
+    <div className="tabs">
+      {categories.map((category, index) => (
+        <button
+          key={index}
+          className={`tab ${category.name === activeCategory ? 'active' : ''}`}
+          onClick={() => onCategorySelect(category.name)}
+        >
+          {category.name}
+        </button>
+      ))}
+    </div>
+  );
+};
+
+export default Tabs;

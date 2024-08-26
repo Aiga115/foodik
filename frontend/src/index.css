@@ -383,7 +383,7 @@ section {
 }
 
 .products .box-container .box img {
-  height: 25rem;
+  height: 15rem;
   width: 100%;
   object-fit: contain;
   margin-bottom: 1rem;
@@ -1156,6 +1156,16 @@ section {
   border-radius: 8px;
 }
 
+.sidebar ul li.active_menu {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.sidebar ul li.active_menu img {
+  background-color: antiquewhite;
+  border-radius: 8px;
+}
+
 .content {
   margin-left: 200px;
   padding: 20px;
@@ -1166,6 +1176,7 @@ section {
   align-items: center;
   background-color: #f4f4f4;
 }
+
 /* Tabs.css */
 
 .tabs {
@@ -1187,4 +1198,15 @@ section {
 
 .tab:hover {
   border-bottom: 3px solid #d9b650;
+}
+
+.tab.active {
+  border-bottom: 3px solid #d9b650;
+}
+
+.cart-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
 }
