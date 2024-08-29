@@ -17,7 +17,7 @@ const FoodCard = ({ item, handleAddToCart }) => {
 
     return (
         <div className="box" style={{ minWidth: "250px" }}>
-            <button className="fas fa-shopping-cart" onClick={() => handleAddToCart(item)}></button>
+            <button className="fas fa-shopping-cart" onClick={() => handleAddToCart(item, quantity)}></button>
             <img src={DishIcon} alt="" />
             <div className="cat">{item.description}</div>
             <div className="name">{item.name}</div>

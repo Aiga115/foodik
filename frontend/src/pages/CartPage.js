@@ -15,7 +15,7 @@ const CartPage = ({ cartItems, handleDeleteCartItem }) => {
             return total + (price * quantity);
         }, 0).toFixed(2);
     };
-
+    
     return (
         <div className="cart-container">
             <div className="cart">

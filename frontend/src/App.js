@@ -36,25 +36,23 @@ function AppContent({ isLoggedIn, setLoggedIn, username, setUsername, cartItems,
     navigate("/login");
   };
 
-  const handleAddToCart = (item) => {
+  const handleAddToCart = (item, quantity) => {
     setCartItems(prevItems => {
-      // Check if the item already exists in the cart
       const existingItemIndex = prevItems.findIndex(cartItem => cartItem.id === item.id);
 
       if (existingItemIndex !== -1) {
-        // Update quantity if the item already exists
         const updatedItems = [...prevItems];
-        updatedItems[existingItemIndex].quantity += item.quantity;
+        updatedItems[existingItemIndex].quantity = quantity;
         return updatedItems;
       } else {
-        // Add new item to the cart
-        return [...prevItems, item];
+        return [...prevItems, { ...item, quantity }];
       }
     });
-  }
+  };
 
-  const handleDeleteFromCart = () => {
-  }
+  const handleDeleteFromCart = (itemId) => {
+    setCartItems(prevItems => prevItems.filter(item => item.id !== itemId));
+  };
 
   return (
     <div
