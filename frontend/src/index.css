@@ -1129,7 +1129,6 @@ section {
 .sidebar {
   height: 100%;
   background-color: transparent;
-  position: fixed;
 }
 
 .sidebar ul {

@@ -2,7 +2,7 @@ import React from "react";
 
 const Sidebar = ({ menu, selectedMenu, onMenuSelect }) => {
     return (
-        <div style={{ margin: '0 auto', maxWidth: '1200px', padding: '2rem' }}>
+        <div style={{ margin: '0 50px' }}>
             <div className="sidebar">
                 <ul>
                     {menu.map((menuItem) => (

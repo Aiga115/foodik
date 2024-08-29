@@ -41,19 +41,25 @@ const Home = ({ handleAddToCart }) => {
     : [];
 
   return (
-    <div style={{ height: "100vh", textAlign: "center", width: "100%", position: "relative" }}>
-      <Sidebar menu={menu} selectedMenu={selectedMenu} onMenuSelect={handleMenuSelect} />
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "start", marginLeft: "300px" }}>
-        {selectedMenu && <Tabs categories={selectedMenu.categories} activeCategory={selectedCategory} onCategorySelect={handleCategorySelect} />}
-        <section className="products" style={{ margin: 0 }}>
-          <div className="box-container" style={{ gridTemplateColumns: "auto auto auto" }}>
-            {selectedItems.map((item, index) => (
-              <FoodCard key={index} item={item} handleAddToCart={handleAddToCart} />
-            ))}
-          </div>
-        </section>
+    <>
+      <div class="heading">
+        <h3>our menu</h3>
+        <p>Please enjoy!</p>
       </div>
-    </div>
+      <div style={{ height: "100vh", width: "100%", display: "flex" }}>
+        <Sidebar menu={menu} selectedMenu={selectedMenu} onMenuSelect={handleMenuSelect} />
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "start" }}>
+          {selectedMenu && <Tabs categories={selectedMenu.categories} activeCategory={selectedCategory} onCategorySelect={handleCategorySelect} />}
+          <section className="products" style={{ margin: 0 }}>
+            <div className="box-container" style={{ gridTemplateColumns: "auto auto auto" }}>
+              {selectedItems.map((item, index) => (
+                <FoodCard key={index} item={item} handleAddToCart={handleAddToCart} />
+              ))}
+            </div>
+          </section>
+        </div>
+      </div>
+    </>
   );
 };
 

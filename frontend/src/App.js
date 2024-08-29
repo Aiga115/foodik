@@ -13,6 +13,8 @@ import AdminHomePage from './pages/admin/AdminHomePage';
 import Header from './components/Header/Header';
 import ProfilePage from './pages/ProfilePage';
 import CartPage from './pages/CartPage';
+import Contact from './pages/Contact';
+import About from './pages/About';
 
 function App() {
   const [isLoggedIn, setLoggedIn] = useState(false);
@@ -71,6 +73,8 @@ function AppContent({ isLoggedIn, setLoggedIn, username, setUsername, cartItems,
         <Route path="/register" element={<Register isLoggedIn={isLoggedIn} setLoggedIn={setLoggedIn} />} />
         <Route path="/profile" element={isLoggedIn ? <ProfilePage user={username} /> : <Navigate to="/register" />} />
         <Route path="/cart" element={<CartPage cartItems={cartItems} handleDeleteCartItem={handleDeleteFromCart} />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/about" element={<About />} />
         {/* Redirect to home if any undefined route */}
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
