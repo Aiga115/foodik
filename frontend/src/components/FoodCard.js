@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import DishIcon from "../assets/dishes.png";
 
-const FoodCard = ({ item, handleAddToCart }) => {
+const FoodCard = ({ item, handleAddToCart, isCart, handleDeleteItem }) => {
     const [quantity, setQuantity] = useState(1);
 
     const handleQuantityChange = (e) => {
@@ -11,13 +11,11 @@ const FoodCard = ({ item, handleAddToCart }) => {
         }
     };
 
-    useEffect(() => {
-        setQuantity(1)
-    }, [item])
-
     return (
         <div className="box" style={{ minWidth: "250px" }}>
-            <button className="fas fa-shopping-cart" onClick={() => handleAddToCart(item, quantity)}></button>
+            {isCart ? <button className="fa fa-trash" onClick={() => handleDeleteItem(item.id)}></button> : (
+                <button className="fas fa-shopping-cart" onClick={() => handleAddToCart(item, quantity)}></button>
+            )}
             <img src={DishIcon} alt="" />
             <div className="cat">{item.description}</div>
             <div className="name">{item.name}</div>

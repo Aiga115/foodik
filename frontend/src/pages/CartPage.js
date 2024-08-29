@@ -26,7 +26,7 @@ const CartPage = ({ cartItems, handleDeleteCartItem }) => {
                         <section className="products" style={{ margin: 0 }}>
                             <div className="box-container" style={{ gridTemplateColumns: "auto auto auto" }}>
                                 {cartItems.map((item, index) => (
-                                    <FoodCard key={index} item={item} />
+                                    <FoodCard key={index} item={item} isCart={true} handleDeleteItem={handleDeleteCartItem}/>
                                 ))}
                             </div>
                             <div className="cart-total">

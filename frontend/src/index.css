@@ -390,6 +390,7 @@ section {
 }
 
 .products .box-container .box .fa-eye,
+.products .box-container .box .fa-trash,
 .products .box-container .box .fa-shopping-cart {
   position: absolute;
   top: 1rem;
@@ -406,6 +407,7 @@ section {
 }
 
 .products .box-container .box .fa-eye:hover,
+.products .box-container .box .fa-trash:hover
 .products .box-container .box .fa-shopping-cart:hover {
   background-color: var(--black);
   color: var(--white);
@@ -415,12 +417,20 @@ section {
   left: -10rem;
 }
 
+.products .box-container .box .fa-trash {
+  right: -10rem;
+}
+
 .products .box-container .box .fa-shopping-cart {
   right: -10rem;
 }
 
 .products .box-container .box:hover .fa-eye {
   left: 1rem;
+}
+
+.products .box-container .box:hover .fa-trash {
+  right: 1rem;
 }
 
 .products .box-container .box:hover .fa-shopping-cart {

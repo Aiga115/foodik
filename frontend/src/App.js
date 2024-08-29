@@ -51,6 +51,7 @@ function AppContent({ isLoggedIn, setLoggedIn, username, setUsername, cartItems,
   };
 
   const handleDeleteFromCart = (itemId) => {
+    console.log("itemId: ", itemId)
     setCartItems(prevItems => prevItems.filter(item => item.id !== itemId));
   };
 

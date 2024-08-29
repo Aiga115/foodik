@@ -29,11 +29,10 @@ const Header = ({ username, onLogout, numberOfCartItems }) => {
                     </nav>
                 ) : (
                     <nav className="navbar">
-                        <Link to="#">home</Link>
-                        <Link to="#">about</Link>
-                        <Link to="#">menu</Link>
-                        <Link to="#">orders</Link>
-                        <Link to="#">contact</Link>
+                        <Link to="/">home</Link>
+                        <Link to="/about">about</Link>
+                        <Link to="/orders">orders</Link>
+                        <Link to="/contact">contact</Link>
                     </nav>
                 )}
 

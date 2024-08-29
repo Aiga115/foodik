@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 
 const ProfileModal = ({ open, onClose, onLogout, username }) => {
     const navigate = useNavigate();
@@ -17,8 +16,8 @@ const ProfileModal = ({ open, onClose, onLogout, username }) => {
     const handleLogoutBtnClick = () => {
         onClose();
         onLogout();
-        localStorage.removeItem('token'); // Clear token
-        window.location.href = '/login'; // Redirect to login
+        localStorage.removeItem('token');
+        window.location.href = '/login';
     };
 
     return (
