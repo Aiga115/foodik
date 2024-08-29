@@ -12,7 +12,7 @@ const FoodCard = ({ item, handleAddToCart, isCart, handleDeleteItem }) => {
     };
 
     return (
-        <div className="box" style={{ minWidth: "250px" }}>
+        <div className="box" style={{ minWidth: "250px", maxWidth: "300px", textAlign: "center", minHeight: "430px", maxHeight: "430px", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
             {isCart ? <button className="fa fa-trash" onClick={() => handleDeleteItem(item.id)}></button> : (
                 <button className="fas fa-shopping-cart" onClick={() => handleAddToCart(item, quantity)}></button>
             )}
