@@ -9,7 +9,7 @@ CORS(app)
 # Environment variables for database connection
 DB_HOST = os.getenv('DB_HOST', 'localhost')
 DB_USER = os.getenv('DB_USER', 'root')
-DB_PASSWORD = os.getenv('DB_PASSWORD', 'aiga')
+DB_PASSWORD = os.getenv('DB_PASSWORD', 'root')
 DB_NAME = os.getenv('DB_NAME', 'foodikdb')
 
 # Connect to MySQL database
@@ -494,6 +494,42 @@ def get_all_orders():
         return jsonify({'error': str(err)}), 500
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+@app.route('/messages', methods=['POST'])
+def contact():
+    data = request.get_json()
+
+    name = data.get('name')
+    number = data.get('number')
+    email = data.get('email')
+    message = data.get('message')
+
+    if not all([name, number, email, message]):
+        return jsonify({'error': 'All fields are required'}), 400
+
+    try:
+        mydb = get_db_connection()
+        cursor = mydb.cursor()
+
+        insert_query = '''
+        INSERT INTO messages (name, number, email, message)
+        VALUES (%s, %s, %s, %s)
+        '''
+        cursor.execute(insert_query, (name, number, email, message))
+
+        mydb.commit()
+        cursor.close()
+        mydb.close()
+
+    except mysql.connector.Error as err:
+        return jsonify({'error': str(err)}), 500
+
+    return jsonify({
+        'name': name,
+        'number': number,
+        'email': email,
+        'message': message
+    }), 200
 
 
 if __name__ == '__main__':
