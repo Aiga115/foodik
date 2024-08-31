@@ -21,15 +21,17 @@ const FoodCard = ({ item, handleAddToCart, isCart, handleDeleteItem }) => {
             <div className="name">{item.name}</div>
             <div className="flex">
                 <div className="price"><span>$</span>{item.price}</div>
-                <input
-                    type="number"
-                    name="qty"
-                    className="qty"
-                    min="1"
-                    max={item.quantity}
-                    value={quantity}
-                    onChange={handleQuantityChange}
-                />
+                {isCart ? <div className="quantity"><span>X</span>{item.quantity}</div> : (
+                    <input
+                        type="number"
+                        name="qty"
+                        className="qty"
+                        min="1"
+                        max={item.quantity}
+                        value={quantity}
+                        onChange={handleQuantityChange}
+                    />
+                )}
             </div>
         </div>
     );

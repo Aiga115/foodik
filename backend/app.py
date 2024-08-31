@@ -9,7 +9,7 @@ CORS(app)
 # Environment variables for database connection
 DB_HOST = os.getenv('DB_HOST', 'localhost')
 DB_USER = os.getenv('DB_USER', 'root')
-DB_PASSWORD = os.getenv('DB_PASSWORD', 'root')
+DB_PASSWORD = os.getenv('DB_PASSWORD', 'aiga')
 DB_NAME = os.getenv('DB_NAME', 'foodikdb')
 
 # Connect to MySQL database
@@ -434,6 +434,67 @@ def get_menus_with_items():
         return jsonify(list(menus.values())), 200
     except mysql.connector.Error as err:
         return jsonify({'error': str(err)}), 500
+
+@app.route('/orders', methods=['POST'])
+def create_order():
+    try:
+        data = request.get_json()
+        
+        username = data.get('username')
+        email = data.get('email')
+        phone_number = data.get('phone_number')
+        address = data.get('address')
+        payment_method = data.get('payment_method')
+        total_price = data.get('total_price')
+        payment_status = data.get('payment_status')
+        order_items = data.get('order_items', [])
+        
+        if not all([username, email, total_price]):
+            return jsonify({'error': 'Missing required fields'}), 400
+        
+        
+        mydb = get_db_connection()
+        cursor = mydb.cursor()
+        
+        cursor.execute("""
+            INSERT INTO orders (username, email, phone_number, address, payment_method, total_price, payment_status, order_items)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+        """, (username, email, phone_number, address, payment_method, total_price, payment_status, order_items))
+        
+        order_id = cursor.lastrowid
+        
+        mydb.commit()
+        cursor.close()
+        mydb.close()
+
+        return jsonify({'message': 'Order created successfully', 'order_id': order_id}), 201
+    except mysql.connector.Error as err:
+        return jsonify({'error': str(err)}), 500
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/orders', methods=['GET'])
+def get_all_orders():
+    try:
+        mydb = get_db_connection()
+        cursor = mydb.cursor(dictionary=True)
+
+        cursor.execute("""
+            SELECT * FROM orders
+        """)
+        
+        orders = cursor.fetchall()
+        
+        cursor.close()
+        mydb.close()
+
+        return jsonify(orders), 200
+
+    except mysql.connector.Error as err:
+        return jsonify({'error': str(err)}), 500
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 
 if __name__ == '__main__':
     app.run(debug=True)

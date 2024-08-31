@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const ProfilePage = ({ user }) => {
   const [username, setUsername] = useState("");
-  const [password, setPassword] = useState(""); // Typically, you won't fetch/display this
+  const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [error, setError] = useState("");
@@ -46,7 +45,7 @@ const ProfilePage = ({ user }) => {
         `http://127.0.0.1:5000/user/${user}`,
         {
           username,
-          password, // Include only if needed
+          password,
           email,
           phoneNumber,
         },

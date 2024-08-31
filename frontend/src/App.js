@@ -15,6 +15,8 @@ import ProfilePage from './pages/ProfilePage';
 import CartPage from './pages/CartPage';
 import Contact from './pages/Contact';
 import About from './pages/About';
+import Orders from './pages/Orders';
+import Payment from './pages/Payment';
 
 function App() {
   const [isLoggedIn, setLoggedIn] = useState(false);
@@ -53,7 +55,6 @@ function AppContent({ isLoggedIn, setLoggedIn, username, setUsername, cartItems,
   };
 
   const handleDeleteFromCart = (itemId) => {
-    console.log("itemId: ", itemId)
     setCartItems(prevItems => prevItems.filter(item => item.id !== itemId));
   };
 
@@ -75,6 +76,8 @@ function AppContent({ isLoggedIn, setLoggedIn, username, setUsername, cartItems,
         <Route path="/cart" element={<CartPage cartItems={cartItems} handleDeleteCartItem={handleDeleteFromCart} />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/about" element={<About />} />
+        <Route path="/orders" element={<Orders />} />
+        <Route path="/payment" element={<Payment orderItems={cartItems} user={username} />} />
         {/* Redirect to home if any undefined route */}
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>

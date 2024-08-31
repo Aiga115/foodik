@@ -1,10 +1,12 @@
 import React from "react";
 import FoodCard from "../components/FoodCard";
+import { useNavigate } from "react-router-dom";
 
 const CartPage = ({ cartItems, handleDeleteCartItem }) => {
+    const navigate = useNavigate();
 
     const handleOrder = () => {
-        alert("Order placed!");
+        navigate("/payment")
     }
 
     const calculateTotal = () => {
@@ -15,7 +17,7 @@ const CartPage = ({ cartItems, handleDeleteCartItem }) => {
             return total + (price * quantity);
         }, 0).toFixed(2);
     };
-    
+
     return (
         <div className="cart-container">
             <div className="cart">
@@ -26,7 +28,7 @@ const CartPage = ({ cartItems, handleDeleteCartItem }) => {
                         <section className="products" style={{ margin: 0 }}>
                             <div className="box-container" style={{ gridTemplateColumns: "auto auto auto" }}>
                                 {cartItems.map((item, index) => (
-                                    <FoodCard key={index} item={item} isCart={true} handleDeleteItem={handleDeleteCartItem}/>
+                                    <FoodCard key={index} item={item} isCart={true} handleDeleteItem={handleDeleteCartItem} />
                                 ))}
                             </div>
                             <div className="cart-total">

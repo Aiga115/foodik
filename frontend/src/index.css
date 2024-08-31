@@ -471,6 +471,16 @@ section {
   font-size: 1.8rem;
 }
 
+.products .box-container .box .flex .quantity {
+  font-size: 2.5rem;
+  color: var(--black);
+}
+
+.products .box-container .box .flex .quantity span {
+  color: var(--light-color);
+  font-size: 1.8rem;
+}
+
 .products .box-container .box .flex .qty {
   padding: 1rem;
   border: var(--border);
@@ -766,6 +776,10 @@ section {
 }
 
 .checkout form .cart-items p .price {
+  color: var(--yellow);
+}
+
+.checkout form .cart-items p .quantity {
   color: var(--yellow);
 }
 
