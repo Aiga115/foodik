@@ -569,6 +569,8 @@ section {
 .about .row .content {
   flex: 1 1 40rem;
   text-align: center;
+  display: flex;
+  flex-direction: column;
 }
 
 .about .row .content h3 {
