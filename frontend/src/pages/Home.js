@@ -42,7 +42,7 @@ const Home = ({ handleAddToCart }) => {
 
   return (
     <>
-      <div class="heading">
+      <div className="heading">
         <h3>our menu</h3>
         <p>Please enjoy!</p>
       </div>

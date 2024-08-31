@@ -55,7 +55,7 @@ const MenuList = () => {
 
     return (
         <div style={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column', width: "100%" }}>
-            <div class="heading" style={{ width: "100%" }}>
+            <div className="heading" style={{ width: "100%" }}>
                 <h3>Do you want to add another menu?</h3>
                 <button onClick={handleShowAddMenuModal} className="btn">Add Menu</button>
             </div>
