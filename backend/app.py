@@ -9,7 +9,7 @@ CORS(app)
 # Environment variables for database connection
 DB_HOST = os.getenv('DB_HOST', 'localhost')
 DB_USER = os.getenv('DB_USER', 'root')
-DB_PASSWORD = os.getenv('DB_PASSWORD', 'root')
+DB_PASSWORD = os.getenv('DB_PASSWORD', 'aiga')
 DB_NAME = os.getenv('DB_NAME', 'foodikdb')
 
 # Connect to MySQL database
@@ -531,6 +531,25 @@ def contact():
         'message': message
     }), 200
 
+@app.route('/messages', methods=['GET'])
+def get_messages():
+    try:
+        mydb = get_db_connection()
+        cursor = mydb.cursor(dictionary=True)
+
+        select_query = '''
+        SELECT name, number, email, message, created_at FROM messages
+        '''
+        cursor.execute(select_query)
+        messages = cursor.fetchall()
+
+        cursor.close()
+        mydb.close()
+
+        return jsonify(messages), 200
+
+    except mysql.connector.Error as err:
+        return jsonify({'error': str(err)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)

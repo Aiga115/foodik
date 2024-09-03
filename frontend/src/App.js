@@ -17,6 +17,7 @@ import Contact from './pages/Contact';
 import About from './pages/About';
 import Orders from './pages/Orders';
 import Payment from './pages/Payment';
+import Messages from './pages/admin/Messages';
 
 function App() {
   const [isLoggedIn, setLoggedIn] = useState(false);
@@ -70,6 +71,7 @@ function AppContent({ isLoggedIn, setLoggedIn, username, setUsername, cartItems,
       <Routes>
         <Route path="/" element={isLoggedIn ? <Home handleAddToCart={handleAddToCart} /> : <Navigate to="/register" />} />
         <Route path="/admin-dashboard" element={isLoggedIn ? <AdminHomePage /> : <Navigate to="/register" />} />
+        <Route path="/messages" element={isLoggedIn ? <Messages /> : <Navigate to="/register" />} />
         <Route path="/login" element={<Login isLoggedIn={isLoggedIn} setLoggedIn={setLoggedIn} username={username} setUsername={setUsername} />} />
         <Route path="/register" element={<Register isLoggedIn={isLoggedIn} setLoggedIn={setLoggedIn} />} />
         <Route path="/profile" element={isLoggedIn ? <ProfilePage user={username} /> : <Navigate to="/register" />} />
