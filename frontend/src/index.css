@@ -1,9 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600&display=swap');
 
 html,
-.root,
 body {
-  height: 100%;
+  min-height: 100vh;
+}
+
+#root {
+  min-height: 100vh;
 }
 
 body {

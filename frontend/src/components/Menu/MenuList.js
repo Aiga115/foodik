@@ -13,10 +13,6 @@ const MenuList = () => {
     const [showAddCategoryModal, setShowCategoryModal] = useState(false);
     const [currentMenuItem, setCurrentMenuItem] = useState(null);
 
-    const handleFetchMenus = (newMenu) => {
-        setMenu(newMenu);
-    }
-
     const handleEditModalClose = () => {
         setShowEditModal(false);
     }
@@ -33,9 +29,26 @@ const MenuList = () => {
         setShowCategoryModal(false)
     }
 
+    const onAddMenuItem = async (name) => {
+        try {
+            await handleAddMenuItem(name);
+            const updatedMenus = await fetchMenus();
+            setMenu(updatedMenus);
+            handleCloseAddMenuModal();
+        } catch (error) {
+            console.error('Failed to add menu:', error);
+        }
+    };
+
+
     useEffect(() => {
-        fetchMenus(handleFetchMenus);
-    }, [menu]);
+        const fetchData = async () => {
+            const res = await fetchMenus();
+            setMenu(res);
+        };
+
+        fetchData();
+    }, []);
 
     if (menu.length === 0) {
         return (
@@ -52,6 +65,8 @@ const MenuList = () => {
             </>
         )
     }
+
+    console.log("menu: ", menu)
 
     return (
         <div style={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column', width: "100%" }}>
@@ -93,7 +108,7 @@ const MenuList = () => {
             <AddMenuModal
                 open={showAddMenuModal}
                 onClose={() => setShowAddMenuModal(false)}
-                onSave={(name) => handleAddMenuItem(name, handleCloseAddMenuModal)}
+                onSave={(name) => onAddMenuItem(name)}
             />
         </div>
     );

@@ -17,7 +17,7 @@ const EditCategoryModal = ({ open, onClose, categoryItem, onSave }) => {
 
     return (
         <div style={{
-            position: "absolute",
+            position: "fixed",
             zIndex: 10000,
             padding: 0,
             top: 0,
@@ -31,7 +31,10 @@ const EditCategoryModal = ({ open, onClose, categoryItem, onSave }) => {
             backgroundColor: "rgb(0, 0, 0)",
             backgroundColor: "rgba(0, 0, 0, 0.4)",
             display: "flex",
-            alignItems: "center"
+            alignItems: "center",
+            bottom: 0,
+            right: 0,
+            left: 0
         }}>
             <div className="modal-content" style={{ background: "#fff", padding: "20px", maxWidth: "400px", margin: "auto" }}>
                 <h2>Edit Category</h2>

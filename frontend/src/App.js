@@ -64,7 +64,7 @@ function AppContent({ isLoggedIn, setLoggedIn, username, setUsername, cartItems,
       style={{
         display: 'flex',
         flexDirection: 'column',
-        minHeight: '100vh'
+        height: '100%'
       }}
     >
       {isLoggedIn && <Header username={username} onLogout={handleLogout} numberOfCartItems={cartItems.length} />}

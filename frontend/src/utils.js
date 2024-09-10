@@ -1,15 +1,16 @@
 // menu api
-export const fetchMenus = async (onUpdate) => {
+export const fetchMenus = async () => {
     try {
         const response = await fetch('http://127.0.0.1:5000/menus_with_items');
         const data = await response.json();
-        onUpdate(data);
+        return Array.isArray(data) ? data : []; // Ensure it returns an array
     } catch (error) {
         console.log(error);
+        return []; // Return empty array in case of error
     }
 };
 
-export const handleAddMenuItem = async (name, onModalClose) => {
+export const handleAddMenuItem = async (name) => {
     try {
         const response = await fetch('http://127.0.0.1:5000/menus', {
             method: 'POST',
@@ -18,7 +19,6 @@ export const handleAddMenuItem = async (name, onModalClose) => {
         });
 
         if (response.ok) {
-            onModalClose();
             alert("Successfully updated!");
             return response.json();
         } else {
