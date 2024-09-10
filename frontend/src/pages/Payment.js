@@ -84,9 +84,10 @@ const Payment = ({ orderItems, user }) => {
             address,
             payment_method: paymentMethod,
             total_price: totalPrice,
-            payment_status: 'Pending',
+            payment_status: 'Success',
             order_items: textResult,
-            card_info: paymentMethod === "credit card" ? cardInfo : null
+            card_info: paymentMethod === "credit card" ? cardInfo : null,
+            order_status: 'Delivering'
         };
 
         try {

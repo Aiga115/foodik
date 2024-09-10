@@ -27,6 +27,7 @@ const Header = ({ username, onLogout, numberOfCartItems }) => {
                     <nav className="navbar">
                         <Link to="/admin-dashboard">admin dashboard</Link>
                         <Link to="/messages">messages</Link>
+                        <Link to="/orders">orders</Link>
                     </nav>
                 ) : (
                     <nav className="navbar">

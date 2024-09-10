@@ -10,7 +10,8 @@ const Home = ({ handleAddToCart }) => {
   const [selectedCategory, setSelectedCategory] = useState(null);
 
   useEffect(() => {
-    fetchMenus((fetchedMenu) => {
+    const getMenus = async () => {
+      const fetchedMenu = await fetchMenus();
       setMenu(fetchedMenu);
 
       // Set default selected menu and category
@@ -20,7 +21,9 @@ const Home = ({ handleAddToCart }) => {
         setSelectedMenu({ ...defaultMenu, categories: categoriesArray });
         setSelectedCategory(categoriesArray[0]?.name || null);
       }
-    });
+    };
+
+    getMenus();
   }, []);
 
   const handleMenuSelect = (menuName) => {

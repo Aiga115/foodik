@@ -59,12 +59,14 @@ function AppContent({ isLoggedIn, setLoggedIn, username, setUsername, cartItems,
     setCartItems(prevItems => prevItems.filter(item => item.id !== itemId));
   };
 
+  const isAdmin = username === 'admin'
+
   return (
     <div
       style={{
         display: 'flex',
         flexDirection: 'column',
-        height: '100%'
+        height: '100vh'
       }}
     >
       {isLoggedIn && <Header username={username} onLogout={handleLogout} numberOfCartItems={cartItems.length} />}
@@ -78,7 +80,7 @@ function AppContent({ isLoggedIn, setLoggedIn, username, setUsername, cartItems,
         <Route path="/cart" element={<CartPage cartItems={cartItems} handleDeleteCartItem={handleDeleteFromCart} />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/about" element={<About />} />
-        <Route path="/orders" element={<Orders />} />
+        <Route path="/orders" element={<Orders isAdmin={isAdmin} />} />
         <Route path="/payment" element={<Payment orderItems={cartItems} user={username} />} />
         {/* Redirect to home if any undefined route */}
         <Route path="*" element={<Navigate to="/" />} />

@@ -1,34 +1,59 @@
 import React, { useEffect, useState } from "react";
 
-const Orders = () => {
+const Orders = ({ isAdmin }) => {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
-    useEffect(() => {
-        const fetchOrders = async () => {
-            try {
-                const response = await fetch('http://localhost:5000/orders', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    }
-                });
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
+    const fetchOrders = async () => {
+        try {
+            const response = await fetch('http://localhost:5000/orders', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
                 }
-                const data = await response.json();
-                setOrders(data);
-            } catch (err) {
-                setError('Failed to fetch orders.');
-                console.error('Error fetching orders:', err);
-            } finally {
-                setLoading(false);
+            });
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
             }
-        };
+            const data = await response.json();
+            setOrders(data);
+        } catch (err) {
+            setError('Failed to fetch orders.');
+            console.error('Error fetching orders:', err);
+        } finally {
+            setLoading(false);
+        }
+    };
 
+    useEffect(() => {
         fetchOrders();
     }, []);
+
+    const updateOrderStatusBtnClick = async (orderId, orderStatus) => {
+        setLoading(true);
+        setError('');
+
+        try {
+            const response = await fetch(`http://127.0.0.1:5000/orders/${orderId}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ order_status: orderStatus })
+            });
+
+            if (response.ok) {
+                alert('Successfully done!')
+                fetchOrders();
+            } else {
+                const errorData = await response.json();
+                setError(`Update failed: ${errorData.error || 'Unknown error'}`);
+            }
+        } catch (error) {
+            setError(`Error: ${error.message}`);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     if (loading) {
         return <p>Loading orders...</p>;
@@ -42,7 +67,9 @@ const Orders = () => {
             </div>
 
             <section className="orders">
-                <h1 className="title">Your Orders</h1>
+                {isAdmin ? <h1 className="title">Orders</h1> : (
+                    <h1 className="title">Your Orders</h1>
+                )}
                 <div className="box-container">
                     {error && <p className="error">{error}</p>}
                     {orders.length > 0 ? (
@@ -57,6 +84,11 @@ const Orders = () => {
                                 <p>Order Items: <span>{order.order_items}</span></p>
                                 <p>Total Price: <span>${order.total_price}</span></p>
                                 <p>Payment Status: <span>{order.payment_status}</span></p>
+                                <p>Order Status: <span>{order.order_status}</span></p>
+                                {isAdmin ? (<div style={{ display: "flex", alignItems: "center", gap: "12px", width: "100%" }}>
+                                    <button className="btn" onClick={() => updateOrderStatusBtnClick(order.order_id, 'Delivered')}>set as delivered</button>
+                                    <button className="delete-btn" onClick={() => updateOrderStatusBtnClick(order.order_id, 'Cancelled')}>set as cancelled</button>
+                                </div>) : (<></>)}
                             </div>
                         ))
                     ) : (

@@ -448,6 +448,7 @@ def create_order():
         total_price = data.get('total_price')
         payment_status = data.get('payment_status')
         order_items = data.get('order_items', [])
+        order_status = data.get('order_status')
         
         if not all([username, email, total_price]):
             return jsonify({'error': 'Missing required fields'}), 400
@@ -457,9 +458,9 @@ def create_order():
         cursor = mydb.cursor()
         
         cursor.execute("""
-            INSERT INTO orders (username, email, phone_number, address, payment_method, total_price, payment_status, order_items)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-        """, (username, email, phone_number, address, payment_method, total_price, payment_status, order_items))
+            INSERT INTO orders (username, email, phone_number, address, payment_method, total_price, payment_status, order_items, order_status)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """, (username, email, phone_number, address, payment_method, total_price, payment_status, order_items, order_status))
         
         order_id = cursor.lastrowid
         
@@ -494,6 +495,37 @@ def get_all_orders():
         return jsonify({'error': str(err)}), 500
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+@app.route('/orders/<int:order_id>', methods=['PATCH'])
+def update_order_status(order_id):
+    try:
+        data = request.get_json()
+        new_status = data.get('order_status')
+        
+        if not new_status:
+            return jsonify({'error': 'Missing order_status field'}), 400
+
+        mydb = get_db_connection()
+        cursor = mydb.cursor()
+        
+        cursor.execute("""
+            UPDATE orders
+            SET order_status = %s
+            WHERE order_id = %s
+        """, (new_status, order_id))
+        
+        if cursor.rowcount == 0:
+            return jsonify({'error': 'Order not found'}), 404
+
+        mydb.commit()
+        cursor.close()
+        mydb.close()
+
+        return jsonify({'message': 'Order status updated successfully'}), 200
+    except mysql.connector.Error as err:
+        return jsonify({'error': f'Database error: {err}'}), 500
+    except Exception as e:
+        return jsonify({'error': f'Error: {str(e)}'}), 500
 
 @app.route('/messages', methods=['POST'])
 def contact():
