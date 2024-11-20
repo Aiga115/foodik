@@ -1,12 +1,22 @@
-// menu api
+// Helper to handle API errors
+const handleApiError = async (response) => {
+    if (!response.ok) {
+        const errorData = await response.json();
+        console.error('API Error:', errorData);
+        throw new Error(errorData.error || 'Unknown error occurred');
+    }
+    return response.json();
+};
+
+// Menu API
 export const fetchMenus = async () => {
     try {
         const response = await fetch('http://127.0.0.1:5000/menus_with_items');
-        const data = await response.json();
-        return Array.isArray(data) ? data : []; // Ensure it returns an array
+        const data = await handleApiError(response);
+        return Array.isArray(data) ? data : [];
     } catch (error) {
-        console.log(error);
-        return []; // Return empty array in case of error
+        console.error('Fetch menus error:', error);
+        return [];
     }
 };
 
@@ -17,185 +27,130 @@ export const handleAddMenuItem = async (name) => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name }),
         });
-
-        if (response.ok) {
-            alert("Successfully updated!");
-            return response.json();
-        } else {
-            const errorData = await response.json();
-            console.error('Update failed:', errorData);
-        }
+        const data = await handleApiError(response);
+        alert('Menu item successfully added!');
+        return data; // Return the added menu item
     } catch (error) {
-        console.error('Error:', error);
+        console.error('Add menu item error:', error);
     }
 };
 
-export const handleDeleteMenuItem = async (id, menu, setMenu) => {
+export const handleDeleteMenuItem = async (id) => {
     try {
         const response = await fetch(`http://127.0.0.1:5000/menus/${id}`, { method: 'DELETE' });
-        if (response.ok) {
-            setMenu(menu.filter(menuItem => menuItem.id !== id));
-            alert("Successfully deleted!");
-        } else {
-            const errorData = await response.json();
-            console.error('Delete failed:', errorData);
-        }
+        await handleApiError(response);
+        alert('Menu item successfully deleted!');
+        return id; // Return the deleted menu item's ID
     } catch (error) {
-        console.error('Error:', error);
+        console.error('Delete menu item error:', error);
     }
 };
 
-export const handleSaveMenuItem = async (menuItem, menu, setMenu, onModalClose) => {
+export const handleSaveMenuItem = async (menuItem) => {
     try {
         const response = await fetch(`http://127.0.0.1:5000/menus/${menuItem.id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name: menuItem.name })
+            body: JSON.stringify({ name: menuItem.name }),
         });
-
-        if (response.ok) {
-            setMenu(menu.map(item => (item.id === menuItem.id ? menuItem : item)));
-            onModalClose();
-            alert("Successfully updated!");
-        } else {
-            const errorData = await response.json();
-            console.error('Update failed:', errorData);
-        }
+        const data = await handleApiError(response);
+        alert('Menu item successfully updated!');
+        return data; // Return the updated menu item
     } catch (error) {
-        console.error('Error:', error);
+        console.error('Save menu item error:', error);
     }
 };
 
-// category api
-export const fetchCategories = async (onUpdate) => {
+// Category API
+export const fetchCategories = async () => {
     try {
         const response = await fetch('http://127.0.0.1:5000/categories');
-        const data = await response.json();
-        onUpdate(data);
+        return await handleApiError(response);
     } catch (error) {
-        console.log(error);
+        console.error('Fetch categories error:', error);
+        return [];
     }
-}
+};
 
-export const handleAddCategoryItem = async (name, menuItem, onModalClose) => {
+export const handleAddCategoryItem = async (name, menuItemId) => {
     try {
         const response = await fetch('http://127.0.0.1:5000/categories', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, menu_id: menuItem.id }),
+            body: JSON.stringify({ name, menu_id: menuItemId }),
         });
-
-        if (response.ok) {
-            onModalClose();
-            alert("Successfully updated!");
-            return response.json();
-        } else {
-            const errorData = await response.json();
-            console.error('Update failed:', errorData);
-        }
+        const data = await handleApiError(response);
+        alert('Category item successfully added!');
+        return data; // Return the added category item
     } catch (error) {
-        console.error('Error:', error);
+        console.error('Add category item error:', error);
     }
 };
 
 export const handleDeleteCategoryItem = async (id) => {
     try {
         const response = await fetch(`http://127.0.0.1:5000/categories/${id}`, { method: 'DELETE' });
-        if (response.ok) {
-            alert("Successfully deleted!");
-        } else {
-            const errorData = await response.json();
-            console.error('Delete failed:', errorData);
-        }
+        await handleApiError(response);
+        alert('Category item successfully deleted!');
+        return id; // Return the deleted category item's ID
     } catch (error) {
-        console.error('Error:', error);
+        console.error('Delete category item error:', error);
     }
 };
 
-
-export const handleSaveCategoryItem = async (categoryItem, menuItemId, onModalClose) => {
+export const handleSaveCategoryItem = async (categoryItem, menuItemId) => {
     try {
         const response = await fetch(`http://127.0.0.1:5000/categories/${categoryItem.id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name: categoryItem.name, menu_id: menuItemId })
+            body: JSON.stringify({ name: categoryItem.name, menu_id: menuItemId }),
         });
-
-        if (response.ok) {
-            onModalClose();
-            alert("Successfully updated!");
-        } else {
-            const errorData = await response.json();
-            console.error('Update failed:', errorData);
-        }
+        const data = await handleApiError(response);
+        alert('Category item successfully updated!');
+        return data; // Return the updated category item
     } catch (error) {
-        console.error('Error:', error);
+        console.error('Save category item error:', error);
     }
 };
 
-// food item api
-export const handleAddFoodItem = async (name, price, quantity, description, category, onModalClose) => {
+// Food Item API
+export const handleAddFoodItem = async (name, price, quantity, description, categoryId) => {
     try {
         const response = await fetch('http://127.0.0.1:5000/food_items', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ name, price, quantity, description, category_id: category.id }),
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, price, quantity, description, category_id: categoryId }),
         });
-
-        if (response.ok) {
-            onModalClose();
-            alert("Successfully updated!");
-            return response.json();
-        } else {
-            const errorData = await response.json();
-            console.error('Update failed:', errorData);
-        }
+        const data = await handleApiError(response);
+        alert('Food item successfully added!');
+        return data; // Return the added food item
     } catch (error) {
-        console.error('Error:', error);
+        console.error('Add food item error:', error);
     }
-}
+};
 
-export const handleDeleteFoodItem = async (food) => {
+export const handleDeleteFoodItem = async (id) => {
     try {
-        const response = await fetch(`http://127.0.0.1:5000/food_items/${food.id}`, {
-            method: 'DELETE',
-        });
-
-        if (response.ok) {
-            alert("Successfully deleted!");
-            fetchMenus();
-        }
+        const response = await fetch(`http://127.0.0.1:5000/food_items/${id}`, { method: 'DELETE' });
+        await handleApiError(response);
+        alert('Food item successfully deleted!');
+        return id; // Return the deleted food item's ID
     } catch (error) {
-        console.log(error);
+        console.error('Delete food item error:', error);
     }
-}
+};
 
-export const handleSaveFoodItem = async (food, name, price, quantity, description, categoryId) => {
+export const handleSaveFoodItem = async (foodItem, name, price, quantity, description, categoryId) => {
     try {
-        const response = await fetch(`http://127.0.0.1:5000/food_items/${food.id}`, {
+        const response = await fetch(`http://127.0.0.1:5000/food_items/${foodItem.id}`, {
             method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                name,
-                price,
-                quantity,
-                description,
-                category_id: categoryId,
-            }),
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, price, quantity, description, category_id: categoryId }),
         });
-
-        if (response.ok) {
-            alert("Successfully updated!");
-            fetchMenus()
-        } else {
-            const result = await response.json();
-            alert(`Failed to update: ${result.error}`);
-        }
+        const data = await handleApiError(response);
+        alert('Food item successfully updated!');
+        return data; // Return the updated food item
     } catch (error) {
-        console.log(error);
+        console.error('Save food item error:', error);
     }
-}
+};
