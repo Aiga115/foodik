@@ -9,6 +9,10 @@ import {
   handleAddCategoryItem,
   handleDeleteMenuItem,
   handleSaveMenuItem,
+  handleDeleteCategoryItem,
+  handleSaveCategoryItem,
+  handleAddFoodItem,
+  handleDeleteFoodItem
 } from "../../utils";
 
 const MenuList = () => {
@@ -17,6 +21,8 @@ const MenuList = () => {
     showAddMenu: false,
     showEditMenu: false,
     showAddCategory: false,
+    showEditCategoryModal: false,
+    showFoodItemModal: false
   });
   const [currentMenuItem, setCurrentMenuItem] = useState(null);
 
@@ -44,8 +50,9 @@ const MenuList = () => {
   };
 
   const onAddCategoryItem = async (name, menuItem) => {
+    console.log("menuItem: ", menuItem)
     try {
-      await handleAddCategoryItem(name, menuItem);
+      await handleAddCategoryItem(name, menuItem.id);
       await refreshMenus();
       toggleModal("showAddCategory", false);
     } catch (error) {
@@ -72,11 +79,48 @@ const MenuList = () => {
     }
   };
 
+  const onDeleteCategoryItem = async (categoryItemId) => {
+    try {
+      await handleDeleteCategoryItem(categoryItemId)
+      await refreshMenus();
+    } catch (error) {
+      console.error("Failed to delete menu:", error);
+    }
+  }
+
+  const onEditCategoryItem = async (categoryItem, menuItemId) => {
+    try {
+      await handleSaveCategoryItem(categoryItem, menuItemId);
+      await refreshMenus();
+      toggleModal("showEditCategoryModal", false);
+    } catch (error) {
+      console.error("Failed to edit category:", error);
+    }
+  }
+
+  const onAddFoodItem = async (name, price, quantity, description, categoryId) => {
+    try {
+      await handleAddFoodItem(name, price, quantity, description, categoryId);
+      await refreshMenus();
+      toggleModal("showFoodItemModal", false);
+    } catch (error) {
+      console.error("Failed to add food:", error)
+    }    
+  }
+
+  const onDeleteFoodItem = async (foodId) => {
+    try {
+      await handleDeleteFoodItem(foodId)
+      await refreshMenus();
+    } catch (error) {
+      console.error("Failed to delete food:", error)
+    }
+  }
+
   useEffect(() => {
     refreshMenus();
   }, []);
 
-  console.log("menu: ", menu);
 
   if (menu.length === 0) {
     return (
@@ -114,14 +158,20 @@ const MenuList = () => {
           key={menuItem.id}
           menuItem={menuItem}
           handleDeleteMenuItem={onDeleteMenuItem}
-          handleEditMenuItem={(updatedMenuItem) => {
-            setCurrentMenuItem(menuItem); // Save current menu for editing
+          handleEditMenuItem={() => {
+            setCurrentMenuItem(menuItem);
             toggleModal("showEditMenu", true);
           }}
           handleAddCategory={() => {
-            setCurrentMenuItem(menuItem); // Save current menu for adding a category
+            setCurrentMenuItem(menuItem);
             toggleModal("showAddCategory", true);
           }}
+          handleDeleteCategoryItem={onDeleteCategoryItem}
+          handleEditCategoryItem={onEditCategoryItem}
+          handleAddFoodItem={onAddFoodItem}
+          handleDeleteFoodItem={onDeleteFoodItem}
+          modals={modals}
+          toggleModal={toggleModal}
         />
       ))}
 

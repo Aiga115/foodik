@@ -29,7 +29,7 @@ export const handleAddMenuItem = async (name) => {
         });
         const data = await handleApiError(response);
         alert('Menu item successfully added!');
-        return data; // Return the added menu item
+        return data;
     } catch (error) {
         console.error('Add menu item error:', error);
     }
@@ -40,7 +40,7 @@ export const handleDeleteMenuItem = async (id) => {
         const response = await fetch(`http://127.0.0.1:5000/menus/${id}`, { method: 'DELETE' });
         await handleApiError(response);
         alert('Menu item successfully deleted!');
-        return id; // Return the deleted menu item's ID
+        return id;
     } catch (error) {
         console.error('Delete menu item error:', error);
     }
@@ -55,7 +55,7 @@ export const handleSaveMenuItem = async (menuItem) => {
         });
         const data = await handleApiError(response);
         alert('Menu item successfully updated!');
-        return data; // Return the updated menu item
+        return data;
     } catch (error) {
         console.error('Save menu item error:', error);
     }
@@ -81,7 +81,7 @@ export const handleAddCategoryItem = async (name, menuItemId) => {
         });
         const data = await handleApiError(response);
         alert('Category item successfully added!');
-        return data; // Return the added category item
+        return data;
     } catch (error) {
         console.error('Add category item error:', error);
     }
@@ -92,7 +92,7 @@ export const handleDeleteCategoryItem = async (id) => {
         const response = await fetch(`http://127.0.0.1:5000/categories/${id}`, { method: 'DELETE' });
         await handleApiError(response);
         alert('Category item successfully deleted!');
-        return id; // Return the deleted category item's ID
+        return id;
     } catch (error) {
         console.error('Delete category item error:', error);
     }
@@ -107,7 +107,7 @@ export const handleSaveCategoryItem = async (categoryItem, menuItemId) => {
         });
         const data = await handleApiError(response);
         alert('Category item successfully updated!');
-        return data; // Return the updated category item
+        return data;
     } catch (error) {
         console.error('Save category item error:', error);
     }
@@ -123,7 +123,7 @@ export const handleAddFoodItem = async (name, price, quantity, description, cate
         });
         const data = await handleApiError(response);
         alert('Food item successfully added!');
-        return data; // Return the added food item
+        return data;
     } catch (error) {
         console.error('Add food item error:', error);
     }
@@ -134,7 +134,7 @@ export const handleDeleteFoodItem = async (id) => {
         const response = await fetch(`http://127.0.0.1:5000/food_items/${id}`, { method: 'DELETE' });
         await handleApiError(response);
         alert('Food item successfully deleted!');
-        return id; // Return the deleted food item's ID
+        return id;
     } catch (error) {
         console.error('Delete food item error:', error);
     }
@@ -149,7 +149,7 @@ export const handleSaveFoodItem = async (foodItem, name, price, quantity, descri
         });
         const data = await handleApiError(response);
         alert('Food item successfully updated!');
-        return data; // Return the updated food item
+        return data;
     } catch (error) {
         console.error('Save food item error:', error);
     }

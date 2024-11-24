@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { handleDeleteFoodItem, handleSaveFoodItem } from "../../utils";
+import { handleSaveFoodItem } from "../../utils";
 
 
 const styles = {
@@ -45,7 +45,7 @@ const FormField = ({ id, label, type, value, onChange, placeholder, maxLength })
     </div>
 );
 
-const FoodItemForm = ({ food, categoryId }) => {
+const FoodItemForm = ({ food, categoryId, handleDeleteFoodItem }) => {
     const [name, setName] = useState(food.name);
     const [price, setPrice] = useState(food.price);
     const [quantity, setQuantity] = useState(food.quantity);
@@ -93,7 +93,7 @@ const FoodItemForm = ({ food, categoryId }) => {
             </div>
 
             <div style={styles.buttonGroup}>
-                <button onClick={() => handleDeleteFoodItem(food)} className="delete-btn">Delete</button>
+                <button onClick={() => handleDeleteFoodItem(food.id)} className="delete-btn">Delete</button>
                 <button
                     onClick={() => handleSaveFoodItem(food, name, price, quantity, description, categoryId)}
                     className="btn"
