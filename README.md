@@ -30,3 +30,11 @@ cd backend
 python app.py
 ```
 
+### Running frontend locally 
+```bash
+cd frontend
+# install all required packages
+npm install
+npm start
+```
+
