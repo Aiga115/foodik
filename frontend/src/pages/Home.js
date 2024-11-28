@@ -14,7 +14,6 @@ const Home = ({ handleAddToCart }) => {
       const fetchedMenu = await fetchMenus();
       setMenu(fetchedMenu);
 
-      // Set default selected menu and category
       if (fetchedMenu.length > 0) {
         const defaultMenu = fetchedMenu[0];
         const categoriesArray = Object.values(defaultMenu.categories);
