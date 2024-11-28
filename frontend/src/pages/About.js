@@ -19,7 +19,7 @@ const About = () => {
 
                 <div className="content">
                     <h3>why choose us?</h3>
-                    <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Deserunt, neque debitis incidunt qui ipsum sed doloremque a molestiae in veritatis ullam similique sunt aliquam dolores dolore? Quasi atque debitis nobis!</p>
+                    <p>A fully functional UNIVERSITY PROJECT written in python and javascript, using different backend and frontend libraries. This food website focuses on fast food and is designed to order food only from 'Foodik' restaurant.</p>
                     <Link to="/" className="btn">our menu</Link>
                 </div>
 
