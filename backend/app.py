@@ -6,13 +6,11 @@ import os
 app = Flask(__name__)
 CORS(app)
 
-# Environment variables for database connection
 DB_HOST = os.getenv('DB_HOST', 'localhost')
 DB_USER = os.getenv('DB_USER', 'root')
 DB_PASSWORD = os.getenv('DB_PASSWORD', 'aiga')
 DB_NAME = os.getenv('DB_NAME', 'foodikdb')
 
-# Connect to MySQL database
 def get_db_connection():
     return mysql.connector.connect(
         host=DB_HOST,
@@ -21,13 +19,9 @@ def get_db_connection():
         database=DB_NAME
     )
 
-# Helper function to decode token (for demonstration, replace with actual implementation)
 def decode_token(token):
-    # Placeholder function for token decoding
-    # Replace this with actual token decoding logic
-    return {'role': 'user'}  # Dummy response, replace with actual token logic
+    return {'role': 'user'}
 
-# Role-based access decorator
 from functools import wraps
 
 def role_required(role):
@@ -39,7 +33,7 @@ def role_required(role):
                 return jsonify({'error': 'Token is missing'}), 403
 
             try:
-                user_info = decode_token(token)  # Replace with actual token decoding
+                user_info = decode_token(token)
                 if user_info['role'] != role:
                     return jsonify({'error': 'Unauthorized'}), 403
             except Exception as e:
@@ -56,7 +50,7 @@ def register():
     password = data.get('password')
     email = data.get('email')
     phoneNumber = data.get('phoneNumber')
-    role = data.get('role', 'user')  # Default to 'user' if not provided
+    role = data.get('role', 'user')
 
     if not username or not password:
         return jsonify({'error': 'Username and password are required'}), 400
@@ -97,11 +91,10 @@ def login():
         if not user:
             return jsonify({'error': 'Invalid username or password'}), 401
 
-        # Example response with token and role
         response = {
             'message': 'Login successful',
-            'token': 'your_generated_jwt_token_here',  # Replace with actual token generation
-            'user': {'id': user[0], 'username': user[1], 'role': user[4]}  # Assuming role is in user[4]
+            'token': 'your_generated_jwt_token_here',
+            'user': {'id': user[0], 'username': user[1], 'role': user[4]}
         }
         cursor.close()
         mydb.close()
@@ -143,7 +136,6 @@ def update_user(username):
         mydb = get_db_connection()
         cursor = mydb.cursor()
 
-        # Build the update query dynamically based on provided fields
         update_fields = []
         update_values = []
 
